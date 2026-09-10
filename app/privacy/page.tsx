@@ -61,6 +61,15 @@ export default function Privacy() {
       </p>
       <h2>2. AI 및 외부 서비스 이용</h2>
       <p>
+        <strong>Vercel · Supabase:</strong> 앱의 API는 Vercel에서 실행하고,
+        기기별 식별자·인증 토큰 해시·문제·답안·학습 기록은 Supabase PostgreSQL의
+        서울 리전에 저장합니다. 앱은 데이터베이스에 직접 접근하지 않고 서버를
+        통해 본인 기록을 조회합니다. 호스팅 제공자는 요청 처리와 보안 운영을
+        위해 IP 주소와 접속 시각 등 기술 정보를 처리할 수 있습니다. 자세한
+        처리 조건은 <a href="https://vercel.com/legal/privacy-policy">Vercel 개인정보처리방침</a>과{' '}
+        <a href="https://supabase.com/privacy">Supabase 개인정보처리방침</a>에서 확인할 수 있습니다.
+      </p>
+      <p>
         <strong>Google Gemini:</strong> 영어 문제와 한국어 해설을 만들기 위해
         서버가 Google Gemini API를 호출합니다. 요청에는 문제 유형·주제·생성
         지시, 중복 방지를 위한 생성 문장과 검증 오류 정보가 포함됩니다. 현재
@@ -76,7 +85,7 @@ export default function Privacy() {
         에서 확인할 수 있습니다.
       </p>
       <p>
-        <strong>LangSmith(서버 추적을 활성화한 경우):</strong> 문제 생성 과정의
+        <strong>LangSmith(현재 운영 서버에서는 비활성화):</strong> 추적을 활성화하면 문제 생성 과정의
         입력·출력, 실행 시간, 오류 정보를 생성 품질과 장애 분석에 사용합니다.
         생성 그래프에는 기기 인증 토큰과 사용자 답안을 전달하지 않습니다.{' '}
         <a
