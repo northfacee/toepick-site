@@ -22,7 +22,7 @@ npm ci
 npm run dev
 ```
 
-개발 주소: `http://127.0.0.1:5173/toepick-site/`.
+개발 주소: `http://127.0.0.1:5173/`.
 
 ```sh
 npm run typecheck
@@ -42,9 +42,9 @@ npm run preview
 - `dist/`: 정적 빌드. `docs/`: GitHub Pages 게시용 동일 결과물과 `.nojekyll`, 404 페이지.
 - `scripts/prepare-pages.mjs`: 정적 본문·하위 경로·이미지/CSS/JS/내부 링크 존재를 검사한 후 `docs/` 갱신.
 
-공개 주소는 `https://northfacee.github.io/toepick-site/`, 개인정보 주소는 `https://northfacee.github.io/toepick-site/privacy/`다. GitHub Pages의 main `/docs` 게시 설정을 API로 확인했다. 이 저장소의 main에 소스와 `docs/`를 함께 푸시하면 Pages 배포가 실행된다. 상위 프로젝트 안에서 website는 독립 Git 저장소이므로 이 저장소를 먼저 푸시하고 상위 저장소의 참조를 갱신한다. 배포 성공 여부는 GitHub Pages 실행 이력과 공개 페이지로 확인한다.
+공개 주소는 `https://toepick.minlabs.app/`, 개인정보 주소는 `https://toepick.minlabs.app/privacy/`다. GitHub Pages의 main `/docs` 게시 설정을 API로 확인했다. 이 저장소의 main에 소스와 `docs/`를 함께 푸시하면 Pages 배포가 실행된다. 상위 프로젝트 안에서 website는 독립 Git 저장소이므로 이 저장소를 먼저 푸시하고 상위 저장소의 참조를 갱신한다. 배포 성공 여부는 GitHub Pages 실행 이력과 공개 페이지로 확인한다.
 
-배포 경로는 `/toepick-site/`이며 다른 경로를 쓰려면 Vite base, `src/site-config.ts`, 배포 검증 스크립트의 경로를 함께 변경해야 한다. HTML을 파일로 직접 열지 말고 HTTP 정적 서버로 확인한다. 이전 Sites 등록 파일은 과거 기록이며 이 사이트의 빌드·배포에서는 사용하지 않는다.
+배포 경로는 `/`이며 다른 경로를 쓰려면 Vite base, `src/site-config.ts`, 배포 검증 스크립트의 경로를 함께 변경해야 한다. HTML을 파일로 직접 열지 말고 HTTP 정적 서버로 확인한다. 이전 Sites 등록 파일은 과거 기록이며 이 사이트의 빌드·배포에서는 사용하지 않는다.
 
 ## 검증 (2026-09-21)
 
@@ -74,3 +74,7 @@ Three.js는 홈 첫 화면이 가까워질 때만 동적으로 로드한다. 기
 화면 밖/비활성 문서에서는 requestAnimationFrame을 중단한다. DPR은 1.5 이하, 별도 후처리·외부 3D 모델·CDN 요청은 없다. 해제 시 이벤트·옵서버·geometry·material·texture·renderer를 정리하며, 늦게 완료된 텍스처도 폐기한다.
 
 3D 동적 번들은 현재 약 571 KB, gzip 약 145 KB라 Vite 기본 500 KB 경고가 출력된다. 이 번들은 초기 공통 JS와 분리되어 있으며 개인정보·모션 줄이기 환경에서는 로드되지 않는다. 실제 모바일 기기의 GPU 성능·배터리 소모와 Safari 검증은 미수행이다.
+
+## 커스텀 도메인 연결 (2026-09-21)
+
+`public/CNAME`의 toepick.minlabs.app을 dist와 docs에 복사하고 빌드 검증에서 확인한다. Cloudflare CNAME toepick → northfacee.github.io (DNS only, TTL Auto), GitHub Pages 커스텀 도메인 설정으로 연결한다. 이 절차의 실제 공개 검증 결과는 상위 프로젝트 README의 배포 기록을 따른다.

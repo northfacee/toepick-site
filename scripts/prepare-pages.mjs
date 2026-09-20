@@ -10,17 +10,18 @@ for (const page of ["index.html", "privacy/index.html"]) {
     throw new Error(`Missing static content: ${page}`);
   for (const [, url] of html.matchAll(/(?:src|href)="([^"#]+)"/g)) {
     if (/^(https?:|mailto:|#)/.test(url)) continue;
-    if (!url.startsWith("/toepick-site/"))
+    if (!url.startsWith("/") || url.startsWith("//"))
       throw new Error(`Invalid Pages URL: ${url}`);
-    let path = url.slice("/toepick-site/".length).split("#")[0];
+    let path = url.slice("/".length).split("#")[0];
     if (!path || path.endsWith("/")) path += "index.html";
     await readFile(join(root, path));
   }
 }
+if ((await readFile(join(root, "CNAME"), "utf8")).trim() !== "toepick.minlabs.app") throw new Error("Missing custom domain");
 await writeFile(join(root, ".nojekyll"), "");
 await writeFile(
   join(root, "404.html"),
-  '<!doctype html><html lang="ko"><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>페이지를 찾을 수 없습니다 | TOE-PICK</title><h1>페이지를 찾을 수 없습니다.</h1><a href="/toepick-site/">TOE-PICK 홈으로</a></html>',
+  '<!doctype html><html lang="ko"><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>페이지를 찾을 수 없습니다 | TOE-PICK</title><h1>페이지를 찾을 수 없습니다.</h1><a href="/">TOE-PICK 홈으로</a></html>',
 );
 await rm("docs", { recursive: true, force: true });
 await cp(root, "docs", { recursive: true });

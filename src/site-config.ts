@@ -1,1 +1,1 @@
-export const BASE = "/toepick-site/";
+export const BASE = "/";

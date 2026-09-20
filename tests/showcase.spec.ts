@@ -176,7 +176,7 @@ test("mobile touch scroll remains native over the 3D canvas", async ({
     hasTouch: true,
   });
   const page = await context.newPage();
-  await page.goto("http://127.0.0.1:4173/toepick-site/");
+  await page.goto("http://127.0.0.1:4173/");
   await expect(page.locator(".hero-showcase")).toHaveAttribute(
     "data-state",
     "ready",

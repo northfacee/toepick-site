@@ -69,7 +69,7 @@ test("privacy direct navigation and refresh without JavaScript", async ({
 }) => {
   const context = await browser.newContext({ javaScriptEnabled: false });
   const page = await context.newPage();
-  await page.goto("http://127.0.0.1:4173/toepick-site/privacy/");
+  await page.goto("http://127.0.0.1:4173/privacy/");
   await page.reload();
   await expect(
     page.getByRole("heading", { name: "개인정보처리방침", exact: true }),
