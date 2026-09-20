@@ -1,40 +1,29 @@
-import { mkdir, readFile, writeFile, copyFile } from 'node:fs/promises';
-import path from 'node:path';
-// Keep this reading-only site usable without JavaScript or a server runtime.
-const prefix = '/toepick-site';
-const source = path.resolve('dist/client');
-const target = path.resolve('docs');
-await mkdir(target, { recursive: true });
-for (const [input, output] of [['index.html', 'index.html'], ['privacy.html', 'privacy/index.html'], ['404.html', '404.html']]) {
-  let html = await readFile(path.join(source, input), 'utf8');
-  html = html.replace(/<script\b[^>]*>[\s\S]*?<\/script>/gi, '').replace(/<link\b[^>]*rel="(?:modulepreload|preload)"[^>]*>/gi, '');
-  const styles = [...html.matchAll(/<link\b[^>]*href="([^"?]+\.css)"[^>]*>/g)].map(match => match[1]);
-  if (styles.length === 0) throw new Error(`Missing stylesheet: ${input}`);
-  for (const style of styles) {
-    const relative = style.replace(/^\//, '');
-    await mkdir(path.dirname(path.join(target, relative)), { recursive: true });
-    await copyFile(path.join(source, relative), path.join(target, relative));
-  }
-  html = html.replace(/\b(href|src)="\/(?!\/)([^"<>]*)"/g, (_, attribute, value) => {
-    const relative = value === 'privacy' ? 'privacy/' : value;
-    return `${attribute}="${prefix}/${relative}"`;
-  });
-  await mkdir(path.dirname(path.join(target, output)), { recursive: true });
-  await writeFile(path.join(target, output), html);
-}
-await copyFile('public/favicon.svg', path.join(target, 'favicon.svg'));
-await writeFile(path.join(target, '.nojekyll'), '');
-const privacy = await readFile(path.join(target, 'privacy/index.html'), 'utf8');
-for (const text of ['개인정보처리방침', 'northface', 'jkgjms2@gmail.com', 'Gemini', 'GitHub Pages', '자동 삭제']) {
-  if (!privacy.includes(text)) throw new Error(`Missing privacy content: ${text}`);
-}
-for (const file of ['index.html', 'privacy/index.html']) {
-  const html = await readFile(path.join(target, file), 'utf8');
-  if (html.includes('<script')) throw new Error('Unexpected script');
-  for (const match of html.matchAll(/(?:href|src)="(\/[^"<>]*)"/g)) {
-    if (!match[1].startsWith(`${prefix}/`)) throw new Error(`Invalid Pages path: ${match[1]}`);
-    const filePath = match[1].slice(prefix.length + 1).split('#')[0];
-    await readFile(path.join(target, filePath.endsWith('/') || !filePath ? filePath + 'index.html' : filePath));
+import { cp, readFile, rm, writeFile } from "node:fs/promises";
+import { resolve, join } from "node:path";
+const root = resolve("dist");
+for (const page of ["index.html", "privacy/index.html"]) {
+  const html = await readFile(join(root, page), "utf8");
+  if (
+    !html.includes("TOE-PICK") ||
+    (page.startsWith("privacy") && !html.includes("정보의 열람"))
+  )
+    throw new Error(`Missing static content: ${page}`);
+  for (const [, url] of html.matchAll(/(?:src|href)="([^"#]+)"/g)) {
+    if (/^(https?:|mailto:|#)/.test(url)) continue;
+    if (!url.startsWith("/toepick-site/"))
+      throw new Error(`Invalid Pages URL: ${url}`);
+    let path = url.slice("/toepick-site/".length).split("#")[0];
+    if (!path || path.endsWith("/")) path += "index.html";
+    await readFile(join(root, path));
   }
 }
-console.log('GitHub Pages HTML, privacy content, styles and local links validated.');
+await writeFile(join(root, ".nojekyll"), "");
+await writeFile(
+  join(root, "404.html"),
+  '<!doctype html><html lang="ko"><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>페이지를 찾을 수 없습니다 | TOE-PICK</title><h1>페이지를 찾을 수 없습니다.</h1><a href="/toepick-site/">TOE-PICK 홈으로</a></html>',
+);
+await rm("docs", { recursive: true, force: true });
+await cp(root, "docs", { recursive: true });
+console.log(
+  "Static content, Pages paths and local assets verified. Output: dist/ and docs/",
+);

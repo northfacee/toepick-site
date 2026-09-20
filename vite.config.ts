@@ -1,8 +1,15 @@
-import tailwindcss from '@tailwindcss/postcss';
-import vinext from 'vinext';
-import { defineConfig } from 'vite';
+import { defineConfig } from "vite";
+import react from "@vitejs/plugin-react";
+import { resolve } from "node:path";
 export default defineConfig({
-  css: { postcss: { plugins: [tailwindcss()] } },
-  server: { watch: { useFsEvents: false, usePolling: true } },
-  plugins: [vinext()],
+  base: "/toepick-site/",
+  plugins: [react()],
+  build: {
+    rollupOptions: {
+      input: {
+        home: resolve("index.html"),
+        privacy: resolve("privacy/index.html"),
+      },
+    },
+  },
 });
