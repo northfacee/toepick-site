@@ -9,7 +9,7 @@ React **19.3.0** · TypeScript · Vite **8.3.0** · Three.js **0.186.0** 기반 
 - 기존 화면 미리보기의 짧은 전환, 마우스 카드 기울기, 버튼 눌림 반응. 자동 음성은 재생하지 않는다.
 - Part 2 듣기 10문제·Part 5 독해 20문제, 한국어 해설·단어 즐겨찾기·이어풀기·학습 기록 소개.
 - 홈·문제·단어·기록 미리보기 탭. 소개용 예시이며 실제 앱 데이터와 연결되지 않는다.
-- iOS·Android 모두 출시 준비 중. 문의: northface · jkgjms2@gmail.com.
+- iOS·Android 모두 출시 준비 중. 문의: northface · support@minlabs.app.
 - `/`와 `/privacy/`는 빌드 시 React에서 HTML로 생성하므로 JavaScript 없이도 소개와 개인정보 본문을 읽을 수 있다. 미리보기 탭 전환은 JavaScript를 사용한다.
 - 개인정보처리방침은 저장된 풀이 시간·기기 설정·Supabase 음성 저장·Speechify/Cartesia·LangSmith 설명을 현재 프로젝트 구현과 대조해 갱신했다. 고정 보관 기간·자동 삭제 정책은 새로 만들지 않았다.
 

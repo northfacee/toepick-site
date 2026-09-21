@@ -268,7 +268,7 @@ function Landing() {
               </span>
             </span>
           </div>
-          <a className="contact-link" href="mailto:jkgjms2@gmail.com">
+          <a className="contact-link" href="mailto:support@minlabs.app">
             궁금한 점이 있나요? 문의하기 <MoveUpRight size={15} />
           </a>
         </div>
@@ -303,7 +303,7 @@ export function App({ privacy = false }: { privacy?: boolean }) {
           <Brand />
           <div>
             <a href={`${BASE}privacy/`}>개인정보처리방침</a>
-            <a href="mailto:jkgjms2@gmail.com">
+            <a href="mailto:support@minlabs.app">
               문의하기 <ArrowUpRight size={14} />
             </a>
           </div>

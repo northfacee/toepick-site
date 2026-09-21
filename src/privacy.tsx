@@ -142,8 +142,8 @@ export function Privacy() {
       <p>
         현재 앱 내 전체 기록 삭제 버튼이나 자동 삭제 API는 없습니다. 서버 기록의
         열람·정정·삭제 또는 처리 정지를 원하면{" "}
-        <a href="mailto:jkgjms2@gmail.com?subject=ToePick%20개인정보%20요청">
-          jkgjms2@gmail.com
+        <a href="mailto:support@minlabs.app?subject=ToePick%20개인정보%20요청">
+          support@minlabs.app
         </a>
         으로 요청해 주세요. 운영자는 요청 대상 기록을 식별하고 소유권을 확인하기
         위한 방법을 안내합니다. 익명 기기 기반 서비스 특성상 앱 제거 등으로 식별
@@ -170,7 +170,7 @@ export function Privacy() {
         <br />
         대상 서비스: <strong>TOE-PICK</strong>
         <br />
-        개인정보 문의: <a href="mailto:jkgjms2@gmail.com">jkgjms2@gmail.com</a>
+        개인정보 문의: <a href="mailto:support@minlabs.app">support@minlabs.app</a>
       </p>
       <h2>7. 방침 변경</h2>
       <p>
