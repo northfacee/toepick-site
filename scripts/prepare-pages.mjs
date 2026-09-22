@@ -18,6 +18,7 @@ for (const page of ["index.html", "privacy/index.html"]) {
   }
 }
 if ((await readFile(join(root, "CNAME"), "utf8")).trim() !== "toepick.minlabs.app") throw new Error("Missing custom domain");
+if ((await readFile(join(root, "app-ads.txt"), "utf8")).trim() !== "google.com, pub-2342703309055057, DIRECT, f08c47fec0942fa0") throw new Error("Missing AdMob app-ads.txt entry");
 await writeFile(join(root, ".nojekyll"), "");
 await writeFile(
   join(root, "404.html"),
