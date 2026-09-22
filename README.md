@@ -10,8 +10,8 @@ React **19.3.0** · TypeScript · Vite **8.3.0** · Three.js **0.186.0** 기반 
 - Part 2 듣기 10문제·Part 5 독해 20문제, 한국어 해설·단어 즐겨찾기·이어풀기·학습 기록 소개.
 - 홈·문제·단어·기록 미리보기 탭. 소개용 예시이며 실제 앱 데이터와 연결되지 않는다.
 - iOS·Android 모두 출시 준비 중. 문의: northface · support@minlabs.app.
-- `/`와 `/privacy/`는 빌드 시 React에서 HTML로 생성하므로 JavaScript 없이도 소개와 개인정보 본문을 읽을 수 있다. 미리보기 탭 전환은 JavaScript를 사용한다.
-- 개인정보처리방침은 저장된 풀이 시간·기기 설정·Supabase 음성 저장·Speechify/Cartesia·LangSmith 설명을 현재 프로젝트 구현과 대조해 갱신했다. 고정 보관 기간·자동 삭제 정책은 새로 만들지 않았다.
+- `/`와 `/privacy/`는 빌드 시 React에서 HTML로 생성하므로 JavaScript 없이도 소개와 한국어·영어 개인정보 본문을 읽을 수 있다. 언어 링크는 두 본문으로 이동한다. 미리보기 탭 전환은 JavaScript를 사용한다.
+- 개인정보처리방침은 사용자가 지정한 App Privacy Policy Generator의 초안 구조를 참고하되, 저장소의 실제 구현에 맞게 한국어 본문을 갱신하고 같은 내용을 영어로 제공한다. 생성기의 임의 보관 기간·AI 개인화·법률상 보장 문구는 사실로 확인되지 않아 사용하지 않았다. 저장된 풀이 시간·기기 설정·Supabase 음성 저장·Speechify/Cartesia·LangSmith와 Google Mobile Ads의 UMP·ATT·광고 식별자 처리를 설명하며 고정 보관 기간·자동 삭제 정책은 새로 만들지 않았다.
 
 ## 실행
 
@@ -38,9 +38,10 @@ npm run preview
 - `src/app.tsx`: 소개와 공통 헤더·푸터.
 - `src/app-preview.tsx`, `src/phone-preview.tsx`: 키보드 접근 가능한 미리보기와 예시 화면.
 - `src/hero-showcase.tsx`, `src/three/`: Three.js 지연 로드·렌더링 수명 주기·기본 도형 생성. `public/showcase/`는 로컬 SVG 화면 텍스처다.
-- `src/privacy.tsx`, `src/styles.css`, `src/showcase.css`: 개인정보 본문과 반응형·비비드 스타일.
+- `src/privacy.tsx`, `src/privacy-en.tsx`, `src/styles.css`, `src/showcase.css`: 한국어·영어 개인정보 본문과 반응형·비비드 스타일.
 - `dist/`: 정적 빌드. `docs/`: GitHub Pages 게시용 동일 결과물과 `.nojekyll`, 404 페이지.
 - `scripts/prepare-pages.mjs`: 정적 본문·하위 경로·이미지/CSS/JS/내부 링크 존재를 검사한 후 `docs/` 갱신.
+- `public/app-ads.txt`: AdMob 계정의 공식 게시자 문구. 빌드 시 `docs/app-ads.txt`로 복사되며 공개 루트 `/app-ads.txt`에 게시한다. 스토어 개발자 웹사이트 주소도 `https://toepick.minlabs.app/`으로 연결해야 AdMob이 확인할 수 있다.
 
 공개 주소는 `https://toepick.minlabs.app/`, 개인정보 주소는 `https://toepick.minlabs.app/privacy/`다. GitHub Pages의 main `/docs` 게시 설정을 API로 확인했다. 이 저장소의 main에 소스와 `docs/`를 함께 푸시하면 Pages 배포가 실행된다. 상위 프로젝트 안에서 website는 독립 Git 저장소이므로 이 저장소를 먼저 푸시하고 상위 저장소의 참조를 갱신한다. 배포 성공 여부는 GitHub Pages 실행 이력과 공개 페이지로 확인한다.
 
@@ -60,6 +61,8 @@ npm run preview
 - 화면 밖 렌더링 중단·재개 및 `visibilitychange` 수명 주기 시뮬레이션 통과.
 - 모션 줄이기에서는 3D 모듈 요청 없음, 실행 중 설정 변경 시 캔버스 정리와 정적 모드 전환 확인.
 - 개인정보에서 3D 모듈·텍스처 요청 없음 확인. WebGL 미지원, 3D 모듈/텍스처 로딩 실패, 실제 컨텍스트 손실에서 정적 폰 대체 확인.
+- Google Mobile Ads·UMP·ATT·광고 시도 기록 설명 반영 후 타입 검사·린트·정적 빌드와 Playwright 15개 테스트 통과.
+- 2026-09-22: 생성기 초안을 실제 구현에 맞게 보정한 한국어·영어 개인정보처리방침을 같은 `/privacy/` HTML에 게시하도록 구성했다. 360px에서 JavaScript 없이 두 언어 표시·앵커 이동·가로 넘침 없음을 확인했고 타입 검사·린트·빌드·Playwright 15개 테스트를 통과했다. 실제 공개 배포 결과는 별도로 확인한다.
 - Chromium 모바일 터치 에뮬레이션으로 캔버스 위 세로 스와이프가 실제 페이지를 스크롤하는지 확인.
 - 생성한 모바일·데스크톱 스크린샷으로 화면 구성 확인. `outputs/`는 로컬 검증 자료이며 Git 제외.
 

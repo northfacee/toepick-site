@@ -98,9 +98,7 @@ test("privacy never requests 3D modules or textures", async ({ page }) => {
   const requests: string[] = [];
   page.on("request", (r) => requests.push(r.url()));
   await page.goto("privacy/");
-  await expect(page.getByRole("heading", { level: 1 })).toContainText(
-    "개인정보처리방침",
-  );
+  await expect(page.getByRole("heading", { name: "개인정보처리방침", exact: true })).toBeVisible();
   expect(
     requests.filter(
       (url) => url.includes("hero-scene-") || url.includes("/showcase/"),

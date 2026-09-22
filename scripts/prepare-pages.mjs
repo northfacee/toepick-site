@@ -5,7 +5,7 @@ for (const page of ["index.html", "privacy/index.html"]) {
   const html = await readFile(join(root, page), "utf8");
   if (
     !html.includes("TOE-PICK") ||
-    (page.startsWith("privacy") && !html.includes("정보의 열람"))
+    (page.startsWith("privacy") && (!html.includes("정보의 열람") || !html.includes('id="privacy-en"') || !html.includes("Privacy Policy")))
   )
     throw new Error(`Missing static content: ${page}`);
   for (const [, url] of html.matchAll(/(?:src|href)="([^"#]+)"/g)) {

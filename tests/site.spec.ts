@@ -69,14 +69,21 @@ test("privacy direct navigation and refresh without JavaScript", async ({
 }) => {
   const context = await browser.newContext({ javaScriptEnabled: false });
   const page = await context.newPage();
+  await page.setViewportSize({ width: 360, height: 780 });
   await page.goto("http://127.0.0.1:4173/privacy/");
   await page.reload();
+  expect(await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth)).toBe(true);
   await expect(
     page.getByRole("heading", { name: "개인정보처리방침", exact: true }),
   ).toBeVisible();
   await expect(page.locator("main")).toContainText("Speechify");
   await expect(page.locator("main")).toContainText("LangSmith");
-  await page.getByRole("link", { name: "← ToePick 소개로 돌아가기" }).click();
+  await expect(page.getByRole("heading", { name: "Privacy Policy", exact: true })).toBeVisible();
+  await expect(page.locator("#privacy-en")).toContainText("Google Mobile Ads");
+  await expect(page.locator("#privacy-en")).toContainText("no scheduled automatic deletion");
+  await page.getByRole("link", { name: "English", exact: true }).click();
+  await expect(page).toHaveURL(/privacy\/#privacy-en$/);
+  await page.getByRole("link", { name: "← Back to ToePick" }).click();
   await expect(page.getByRole("heading", { level: 1 })).toContainText(
     "매일 듣고",
   );

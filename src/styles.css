@@ -1233,10 +1233,41 @@ section[id] {
   font-size: 9px;
   line-height: 1.8;
 }
+html:has(body[data-page="privacy"]) {
+  scroll-behavior: auto;
+}
 .policy {
   max-width: 800px;
   width: calc(100% - 48px);
   margin: 65px auto 90px;
+}
+.policy-languages {
+  display: flex;
+  gap: 10px;
+  margin: 22px 0 30px;
+}
+.policy-languages a {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  padding: 7px 16px;
+  border: var(--border);
+  border-radius: 999px;
+  background: #fff;
+  font-weight: 700;
+  text-decoration: none;
+}
+.policy-languages a:focus-visible {
+  outline: 3px solid #6443c6;
+  outline-offset: 3px;
+}
+.policy-language-section {
+  scroll-margin-top: 85px;
+}
+.policy-language-section + .policy-language-section {
+  border-top: 2px solid #292830;
+  margin-top: 64px;
+  padding-top: 46px;
 }
 .policy h1 {
   font-size: 40px;
@@ -1249,9 +1280,13 @@ section[id] {
 }
 .policy p,
 .policy li {
-  font-size: 15px;
+  font-size: 16px;
   line-height: 1.95;
   word-break: keep-all;
+}
+.policy [lang="en"] p,
+.policy [lang="en"] li {
+  word-break: normal;
 }
 .policy p {
   margin-block: 18px;
@@ -1856,7 +1891,7 @@ section[id] {
   }
   .policy p,
   .policy li {
-    font-size: 14px;
+    font-size: 16px;
   }
   .policy .summary {
     padding: 17px;

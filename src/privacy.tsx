@@ -1,10 +1,16 @@
 import { BASE } from "./site-config";
+import { EnglishPrivacy } from "./privacy-en";
 export function Privacy() {
   return (
     <main id="main" className="policy">
       <p className="eyebrow">TOEPICK · PRIVACY POLICY</p>
-      <h1>개인정보처리방침</h1>
-      <p className="date">시행일 및 최종 수정일: 2026년 9월 21일</p>
+      <nav className="policy-languages" aria-label="개인정보처리방침 언어 / Privacy policy languages">
+        <a href="#privacy-ko" lang="ko">한국어</a>
+        <a href="#privacy-en" lang="en">English</a>
+      </nav>
+      <section id="privacy-ko" className="policy-language-section" lang="ko" aria-labelledby="privacy-ko-title">
+      <h1 id="privacy-ko-title">개인정보처리방침</h1>
+      <p className="date">시행일 및 최종 수정일: 2026년 9월 22일</p>
       <p>
         northface(이하 “운영자”)는 ToePick(앱 내 표기: TOE-PICK, Android 패키지:
         com.toepick)의 사용자 정보를 아래와 같이 처리합니다. 이 방침은 ToePick
@@ -27,8 +33,16 @@ export function Privacy() {
         <li>
           <strong>기기별 서비스 식별 정보:</strong> 앱 설치에 대해 서버가
           발급하는 임의 식별자, 인증 토큰의 해시값을 기록 소유권 확인과 다른
-          이용자의 기록 접근 방지에 사용합니다. 광고 ID, IMEI 또는 전화번호를
-          식별자로 사용하지 않습니다.
+          이용자의 기록 접근 방지에 사용합니다. 이 서비스 식별 정보에 광고 ID,
+          IMEI 또는 전화번호를 사용하지 않습니다.
+        </li>
+        <li>
+          <strong>광고 관련 정보:</strong> 모바일 앱은 Google Mobile Ads SDK를
+          사용합니다. Google은 광고 제공·빈도 제한·부정 사용 방지·성과 측정을
+          위해 IP 주소, 앱·기기 정보, 광고 상호작용 및 기기 광고 식별자를 처리할
+          수 있습니다. iOS 추적 권한을 거부하거나 개인정보 선택에서 맞춤형 광고를
+          허용하지 않아도 IDFA 기반 추적 없이 광고가 제공될 수 있으며, 학습 결과
+          이용은 제한되지 않습니다.
         </li>
         <li>
           <strong>학습 기록:</strong> 문제 세트 식별자, 생성 일시·상태, 생성된
@@ -49,14 +63,25 @@ export function Privacy() {
         </li>
       </ul>
       <p>
-        현재 앱은 이름·이메일을 요구하는 회원가입, 광고, 위치·연락처·사진·마이크
+        현재 앱은 이름·이메일을 요구하는 회원가입이나 위치·연락처·사진·마이크
         수집 기능을 제공하지 않습니다. Sentry, PostHog, LogRocket의 분석·세션
         재생 SDK는 현재 앱에 적용되어 있지 않습니다.
       </p>
       <h2>2. AI 및 외부 서비스 이용</h2>
       <p>
+        <strong>Google Mobile Ads:</strong> 모바일 앱은 LC 또는 RC 새 풀이 세션을
+        처음 완주하고 결과표로 이동할 때 전면광고 표시를 최대 한 번 시도합니다.
+        앱 시작 시 Google의 사용자 메시지 플랫폼(UMP)으로 적용되는 지역의 동의
+        상태를 확인하고, 필요한 경우 선택 화면을 제공합니다. iOS에서 IDFA 기반
+        추적을 사용하려는 경우 Apple의 앱 추적 투명성(ATT) 권한을 요청합니다.
+        광고가 준비되지 않았거나 동의가 제한되어도 결과표로 바로 이동합니다. 처리
+        방식과 선택 사항은{" "}
+        <a href="https://policies.google.com/privacy" target="_blank" rel="noreferrer">Google 개인정보처리방침</a>
+        과 <a href="https://support.google.com/My-Ad-Center-Help/answer/12155764" target="_blank" rel="noreferrer">광고 개인정보 안내</a>에서 확인할 수 있습니다.
+      </p>
+      <p>
         <strong>Vercel · Supabase:</strong> 앱의 API는 Vercel에서 실행하고,
-        기기별 식별자·인증 토큰 해시·문제·답안·학습 기록은 Supabase PostgreSQL의
+        기기별 식별자·인증 토큰 해시·문제·답안·학습 기록은 Supabase PostgreSQL에
         저장합니다. 생성된 듣기 MP3는 Supabase 비공개 Storage에 보관합니다. 앱은
         데이터베이스에 직접 접근하지 않고 서버를 통해 본인 기록을 조회합니다.
         호스팅 제공자는 요청 처리와 보안 운영을 위해 IP 주소와 접속 시각 등 기술
@@ -123,6 +148,12 @@ export function Privacy() {
       </p>
       <h2>3. 보관 기간과 삭제</h2>
       <p>
+        <strong>광고 관련 정보:</strong> 광고 관련 정보는 Google의 정책과 이용자
+        선택에 따라 처리·보관됩니다. 앱은 같은 학습 세션에서 광고를 다시 시도하지
+        않기 위해 해당 세션의 광고 시도 여부만 기기 내 SQLite 저장소에 보관하며,
+        앱 데이터 삭제 또는 앱 제거로 삭제할 수 있습니다.
+      </p>
+      <p>
         <strong>서버의 기기 식별 정보와 학습 기록:</strong> 현재 학습 기록
         조회와 이어풀기를 위해 저장되며, 정기 자동 삭제나 고정 보관 기간은
         설정되어 있지 않습니다. 별도 삭제 처리가 이루어지기 전까지 서버에 남을
@@ -164,6 +195,11 @@ export function Privacy() {
         정보만 적어 주세요. 가입 계정이 없는 서비스이므로 계정 탈퇴 절차 대신
         저장된 학습 기록에 관한 요청을 받습니다.
       </p>
+      <p>
+        적용 지역에서 광고 개인정보 선택의 재진입이 요구되는 경우 앱 마이페이지의
+        “개인정보 옵션 열기”에서 선택을 다시 확인하거나 변경할 수 있습니다. iOS의
+        추적 권한은 기기 설정에서도 변경할 수 있습니다.
+      </p>
       <h2>6. 운영자 및 문의처</h2>
       <p>
         운영자: <strong>northface</strong>
@@ -181,6 +217,8 @@ export function Privacy() {
       <p>
         <a href={BASE}>← ToePick 소개로 돌아가기</a>
       </p>
+      </section>
+      <EnglishPrivacy />
     </main>
   );
 }
