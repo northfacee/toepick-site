@@ -8,7 +8,6 @@ import {
   Play,
   CalendarDays,
   Volume2,
-  MoveUpRight,
   Smartphone,
   Pause,
 } from "lucide-react";
@@ -18,6 +17,7 @@ import { useCardTilt } from "./use-card-tilt";
 import { Preview } from "./app-preview";
 import { Privacy } from "./privacy";
 import { BASE } from "./site-config";
+import { SupportContact } from "./support-contact";
 
 function Brand() {
   return (
@@ -268,9 +268,6 @@ function Landing() {
               </span>
             </span>
           </div>
-          <a className="contact-link" href="mailto:support@minlabs.app">
-            궁금한 점이 있나요? 문의하기 <MoveUpRight size={15} />
-          </a>
         </div>
         <span className="closing-star" aria-hidden="true">
           ✳
@@ -301,11 +298,9 @@ export function App({ privacy = false }: { privacy?: boolean }) {
       <footer className="site-footer section-wrap">
         <div className="footer-top">
           <Brand />
-          <div>
+          <div className="footer-links">
             <a href={`${BASE}privacy/`}>개인정보처리방침</a>
-            <a href="mailto:support@minlabs.app">
-              문의하기 <ArrowUpRight size={14} />
-            </a>
+            <SupportContact />
           </div>
         </div>
         <div className="footer-bottom">

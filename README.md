@@ -9,7 +9,7 @@ React **19.3.0** · TypeScript · Vite **8.3.0** · Three.js **0.186.0** 기반 
 - 기존 화면 미리보기의 짧은 전환, 마우스 카드 기울기, 버튼 눌림 반응. 자동 음성은 재생하지 않는다.
 - Part 2 듣기 10문제·Part 5 독해 20문제, 한국어 해설·단어 즐겨찾기·이어풀기·학습 기록 소개.
 - 홈·문제·단어·기록 미리보기 탭. 소개용 예시이며 실제 앱 데이터와 연결되지 않는다.
-- iOS·Android 모두 출시 준비 중. 문의: northface · support@minlabs.app.
+- iOS·Android 모두 출시 준비 중. 공통 하단에서 문의 이메일 support@minlabs.app을 읽고 선택·복사할 수 있다. 소개 영역의 중복 문의 링크는 제거했다.
 - `/`와 `/privacy/`는 빌드 시 React에서 HTML로 생성하므로 JavaScript 없이도 소개와 한국어·영어 개인정보 본문을 읽을 수 있다. 언어 링크는 두 본문으로 이동한다. 미리보기 탭 전환은 JavaScript를 사용한다.
 - 개인정보처리방침은 사용자가 지정한 App Privacy Policy Generator의 초안 구조를 참고하되, 저장소의 실제 구현에 맞게 한국어 본문을 갱신하고 같은 내용을 영어로 제공한다. 생성기의 임의 보관 기간·AI 개인화·법률상 보장 문구는 사실로 확인되지 않아 사용하지 않았다. 저장된 풀이 시간·기기 설정·Supabase 음성 저장·Speechify/Cartesia·LangSmith와 Google Mobile Ads의 UMP·ATT·광고 식별자 처리를 설명하며 고정 보관 기간·자동 삭제 정책은 새로 만들지 않았다.
 
@@ -36,6 +36,7 @@ npm run preview
 ## 구조와 배포
 
 - `src/app.tsx`: 소개와 공통 헤더·푸터.
+- `src/support-contact.tsx`: 이메일 주소와 복사 버튼, 성공·실패 안내. JavaScript 없이도 주소는 정적 HTML로 제공한다.
 - `src/app-preview.tsx`, `src/phone-preview.tsx`: 키보드 접근 가능한 미리보기와 예시 화면.
 - `src/hero-showcase.tsx`, `src/three/`: Three.js 지연 로드·렌더링 수명 주기·기본 도형 생성. `public/showcase/`는 로컬 SVG 화면 텍스처다.
 - `src/privacy.tsx`, `src/privacy-en.tsx`, `src/styles.css`, `src/showcase.css`: 한국어·영어 개인정보 본문과 반응형·비비드 스타일.
@@ -84,3 +85,9 @@ Three.js는 홈 첫 화면이 가까워질 때만 동적으로 로드한다. 기
 
 ## 개인정보 설명 갱신 (2026-09-30)
 한국어·영어 개인정보처리방침에 Sentry 오류 진단, PostHog 익명 화면·학습·광고 이벤트, Firebase Analytics 자동 앱·광고 지표 처리를 반영했다. 분석 SDK가 적용되지 않았다는 과거 설명을 제거하고 세션 재생·터치 자동 수집 비활성 및 문제·답안·토큰을 이벤트 속성에 넣지 않는 구현을 설명한다. 소스와 기존에 생성된 privacy/index.html·docs/ 게시 산출물을 함께 버전 관리한다. 이번 커밋 정리에서 추가 빌드·브라우저 테스트·공개 페이지 검증은 실행하지 않았다.
+
+## 이메일 연락처·복사 안내 (2026-09-30)
+
+문의 주소는 공통 하단에 텍스트로 표시하고 사용자 동작으로만 복사한다. 복사가 차단되면 직접 선택·복사를 안내한다. JavaScript 비활성 상태에서는 주소를 읽고 선택할 수 있고 복사 버튼은 비활성화된다. 홈페이지의 소개 영역에 있던 중복 문의 링크는 제거했다.
+
+검증: 타입 검사·린트·빌드·기존 Playwright 15개 테스트 통과. 별도 브라우저 확인에서 360·768·1440px 가로 넘침 없음, 실제 클립보드에 정확한 이메일 복사, 복사 실패 안내, 개인정보 페이지 하단 복사, JavaScript 없이 두 페이지의 연락처 표시를 확인했다. 게시용 docs와 정적 HTML을 갱신했다. 공개 반영 여부는 GitHub Pages 실행 결과와 운영 페이지의 이메일 복사 동작으로 확인한다.
