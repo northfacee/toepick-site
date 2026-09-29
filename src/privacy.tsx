@@ -64,10 +64,29 @@ export function Privacy() {
       </ul>
       <p>
         현재 앱은 이름·이메일을 요구하는 회원가입이나 위치·연락처·사진·마이크
-        수집 기능을 제공하지 않습니다. Sentry, PostHog, LogRocket의 분석·세션
-        재생 SDK는 현재 앱에 적용되어 있지 않습니다.
+        수집 기능을 제공하지 않습니다. 추적 SDK가 포함된 앱 빌드에서는 아래의
+        오류·이용·광고 분석 정보를 처리합니다. 화면 녹화나 터치 자동 수집은 하지 않습니다.
       </p>
       <h2>2. AI 및 외부 서비스 이용</h2>
+      <p>
+        <strong>Sentry:</strong> 앱 오류를 진단하기 위해 예외 메시지·코드 위치,
+        앱 버전·운영체제·기기 모델과 오류 발생 시각을 처리할 수 있습니다.
+        인증 토큰·답안·문항 본문을 오류 속성으로 보내지 않습니다.
+        <a href="https://sentry.io/privacy/" target="_blank" rel="noreferrer">Sentry 개인정보처리방침</a>을 참고하세요.
+      </p>
+      <p>
+        <strong>PostHog:</strong> 임의 분석 식별자와 홈·풀이·결과 화면 진입,
+        세트 시작·문항 제출·완료·결과 확인 및 광고 열림·닫힘 이벤트를 분석해
+        학습 흐름을 개선합니다. 파트와 문항 순번 외에 세트 ID, 문제·답안 내용,
+        인증 토큰은 이벤트에 넣지 않습니다. 세션 재생과 터치 자동 수집은 꺼져 있습니다.
+        <a href="https://posthog.com/privacy" target="_blank" rel="noreferrer">PostHog 개인정보처리방침</a>을 참고하세요.
+      </p>
+      <p>
+        <strong>Firebase Analytics:</strong> 앱 실행·설치·이용과 광고 노출·수익,
+        유입 경로를 파악하기 위해 앱 인스턴스 식별자, 기기·앱 정보 및 자동 수집
+        이벤트를 처리할 수 있습니다. 학습 세부 이벤트는 Firebase에 별도로 보내지
+        않습니다. <a href="https://firebase.google.com/support/privacy" target="_blank" rel="noreferrer">Firebase 개인정보 안내</a>를 참고하세요.
+      </p>
       <p>
         <strong>Google Mobile Ads:</strong> 모바일 앱은 LC 또는 RC 새 풀이 세션을
         처음 완주하고 결과표로 이동할 때 전면광고 표시를 최대 한 번 시도합니다.

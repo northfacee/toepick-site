@@ -67,11 +67,36 @@ export function EnglishPrivacy() {
       <p>
         The app does not currently require a name or email to create an account
         and does not provide features that collect precise location, contacts,
-        photos, or microphone recordings. Sentry, PostHog, and LogRocket
-        analytics or session-replay SDKs are not currently integrated.
+        photos, or microphone recordings. App builds containing the tracking
+        SDKs process the diagnostics, usage, and advertising data described
+        below. Screen replay and automatic touch capture are disabled.
       </p>
 
       <h2>2. AI and third-party services</h2>
+      <p>
+        <strong>Sentry:</strong> To diagnose app errors, Sentry may process
+        exception messages, code locations, app version, operating system,
+        device model, and error time. Authentication tokens, answers, and
+        question text are not added as error properties. See the{" "}
+        <a href="https://sentry.io/privacy/" target="_blank" rel="noreferrer">Sentry Privacy Policy</a>.
+      </p>
+      <p>
+        <strong>PostHog:</strong> An anonymous analytics identifier and events
+        for home, practice, and result views; set starts, submissions,
+        completions, result views, and ad opens/closes help improve learning
+        flow. Events include the part and question position, but no set IDs,
+        question or answer text, or authentication tokens. Session replay and
+        automatic touch capture are disabled. See the{" "}
+        <a href="https://posthog.com/privacy" target="_blank" rel="noreferrer">PostHog Privacy Policy</a>.
+      </p>
+      <p>
+        <strong>Firebase Analytics:</strong> App instance identifiers, app and
+        device information, and automatically collected app, acquisition,
+        ad impression, and revenue events may be processed to understand
+        acquisition and advertising. Detailed learning events are not also
+        sent to Firebase. See{" "}
+        <a href="https://firebase.google.com/support/privacy" target="_blank" rel="noreferrer">Firebase privacy information</a>.
+      </p>
       <p>
         <strong>Google Mobile Ads:</strong> When you complete a new LC or RC
         practice session and move to its results, the app attempts to display

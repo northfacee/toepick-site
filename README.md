@@ -81,3 +81,6 @@ Three.js는 홈 첫 화면이 가까워질 때만 동적으로 로드한다. 기
 ## 커스텀 도메인 연결 (2026-09-21)
 
 `public/CNAME`의 toepick.minlabs.app을 dist와 docs에 복사하고 빌드 검증에서 확인한다. Cloudflare CNAME toepick → northfacee.github.io (DNS only, TTL Auto), GitHub Pages 커스텀 도메인 설정으로 연결한다. 이 절차의 실제 공개 검증 결과는 상위 프로젝트 README의 배포 기록을 따른다.
+
+## 개인정보 설명 갱신 (2026-09-30)
+한국어·영어 개인정보처리방침에 Sentry 오류 진단, PostHog 익명 화면·학습·광고 이벤트, Firebase Analytics 자동 앱·광고 지표 처리를 반영했다. 분석 SDK가 적용되지 않았다는 과거 설명을 제거하고 세션 재생·터치 자동 수집 비활성 및 문제·답안·토큰을 이벤트 속성에 넣지 않는 구현을 설명한다. 소스와 기존에 생성된 privacy/index.html·docs/ 게시 산출물을 함께 버전 관리한다. 이번 커밋 정리에서 추가 빌드·브라우저 테스트·공개 페이지 검증은 실행하지 않았다.
