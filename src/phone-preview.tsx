@@ -7,9 +7,14 @@ import {
   CalendarDays,
   Home,
   Sparkles,
+  Grid2X2,
+  Smile,
+  RotateCcw,
+  Play,
 } from "lucide-react";
 export const tabs = ["홈", "문제", "단어", "기록"] as const;
-const icons = [Home, Headphones, BookOpen, CalendarDays];
+const icons = [Home, Star, Grid2X2, Smile];
+const navigation = ["홈", "단어", "기록", "마이페이지"];
 function HomeScreen() {
   return (
     <>
@@ -18,16 +23,16 @@ function HomeScreen() {
           DAILY QUEST<span>오늘의 작은 도전</span>
         </strong>
         <span className="date-sticker">
-          LET’S
+          시험일
           <br />
-          DO IT!
+          설정
         </span>
       </div>
       <div className="phone-stats">
         <div>
           <small>LISTENING</small>
           <b>
-            0 <span>/ 10</span>
+            0 <span>/ 16</span>
           </b>
         </div>
         <div>
@@ -38,21 +43,21 @@ function HomeScreen() {
         </div>
       </div>
       <div className="mini-drill mint">
-        <span className="mini-label">PART 2</span>
+        <span className="mini-label">Part 2·3·4</span>
         <Headphones className="drill-icon" size={36} />
-        <h4>귀를 열어볼 시간!</h4>
-        <p>듣기 10문제로 워밍업</p>
+        <h4>Listening</h4>
+        <p>질문·응답, 대화, 담화를 듣고 풀어요.</p>
         <div className="mini-action">
-          LISTENING START <ArrowRight size={15} />
+          Listening 열기 <ArrowRight size={15} />
         </div>
       </div>
-      <div className="mini-drill lavender">
+      <div className="mini-drill lime">
         <span className="mini-label">PART 5</span>
         <BookOpen className="drill-icon" size={36} />
-        <h4>한 문장씩, 차근차근.</h4>
+        <h4>Reading</h4>
         <p>문법과 어휘를 채우는 20문제</p>
         <div className="mini-action">
-          READING START <ArrowRight size={15} />
+          Part 5 시작하기 <ArrowRight size={15} />
         </div>
       </div>
       <div className="streak">
@@ -142,13 +147,24 @@ function HistoryScreen() {
         </div>
         <small>✓ 학습한 날을 차곡차곡</small>
       </div>
-      <div className="balance">
-        <b>이번 주의 밸런스</b>
-        <div className="balance-bar">
-          <span>LC</span>
-          <span>RC</span>
-        </div>
-        <small>듣기와 독해, 골고루 쌓아가요.</small>
+      <div className="record-scores">
+        {[
+          ["Part 2", "80%"],
+          ["Part 3", "67%"],
+          ["Part 4", "100%"],
+          ["Part 5", "80%"],
+        ].map(([part, score], i) => (
+          <div key={part} className={`score-part part-${i}`}>
+            <b>{part}</b>
+            <span
+              className="score-ring"
+              style={{ "--score": score } as React.CSSProperties}
+            >
+              {score}
+            </span>
+            <small>정답 · 오답 기록</small>
+          </div>
+        ))}
       </div>
       <div className="record-row">
         <span>PART 2 · 완료</span>
@@ -171,13 +187,20 @@ function ListeningScreen() {
         <Headphones size={25} />
       </div>
       <div className="listening-static">
-        <span className="pill">PART 2 / TRACK 01</span>
-        <div className="static-cassette">
-          <span>TOE-PICK DAILY MIX</span>
-          <div>
-            ✳ <span>━━━━</span> ✳
+        <span className="pill">PART 2 · 01 / 10</span>
+        <div className="static-mixtape">
+          <b>TOE-PICK MIXTAPE / SIDE A</b>
+          <div className="mini-wave">
+            <span>
+              <Play size={18} fill="currentColor" />
+            </span>
+            <div>
+              {Array.from({ length: 21 }, (_, i) => (
+                <i key={i} style={{ height: `${9 + ((i * 13) % 21)}px` }} />
+              ))}
+            </div>
+            <RotateCcw size={20} />
           </div>
-          <small>SIDE A · YOUR DAILY ROUTINE</small>
         </div>
         <b>듣고, 고르고, 다시 듣고.</b>
       </div>
@@ -214,11 +237,16 @@ export function Phone({ screen = 0 }: { screen?: number }) {
       <div className="phone-nav" aria-hidden="true">
         {icons.map((Icon, i) => (
           <span
-            className={i === (screen === 4 ? 1 : screen) ? "active" : ""}
-            key={tabs[i]}
+            className={
+              i ===
+              (screen === 2 ? 1 : screen === 3 ? 2 : screen === 0 ? 0 : -1)
+                ? "active"
+                : ""
+            }
+            key={navigation[i]}
           >
             <Icon size={18} />
-            {tabs[i]}
+            {navigation[i]}
           </span>
         ))}
       </div>

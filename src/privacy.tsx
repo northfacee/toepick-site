@@ -10,7 +10,7 @@ export function Privacy() {
       </nav>
       <section id="privacy-ko" className="policy-language-section" lang="ko" aria-labelledby="privacy-ko-title">
       <h1 id="privacy-ko-title">개인정보처리방침</h1>
-      <p className="date">시행일 및 최종 수정일: 2026년 9월 22일</p>
+      <p className="date">시행일 및 최종 수정일: 2026년 10월 15일</p>
       <p>
         northface(이하 “운영자”)는 ToePick(앱 내 표기: TOE-PICK, Android 패키지:
         com.toepick)의 사용자 정보를 아래와 같이 처리합니다. 이 방침은 ToePick
@@ -68,6 +68,13 @@ export function Privacy() {
         오류·이용·광고 분석 정보를 처리합니다. 화면 녹화나 터치 자동 수집은 하지 않습니다.
       </p>
       <h2>2. AI 및 외부 서비스 이용</h2>
+      <p>
+        <strong>Expo EAS Observe:</strong> 이 SDK가 포함된 새 설치 빌드에서는
+        앱 시작·화면 전환 시간, 앱 버전·기기·운영체제 정보, 세션 식별자와
+        JavaScript 오류·코드 위치를 Expo에 보내 성능과 안정성을 진단합니다.
+        화면 경로는 패턴으로 기록하고 세션·문항·단어의 경로 식별자는 제외합니다.
+        앱이 복구한 요청·작업 오류는 응답 본문이나 사용자 입력 대신 고정된 작업명으로 기록합니다.
+      </p>
       <p>
         <strong>Sentry:</strong> 앱 오류를 진단하기 위해 예외 메시지·코드 위치,
         앱 버전·운영체제·기기 모델과 오류 발생 시각을 처리할 수 있습니다.

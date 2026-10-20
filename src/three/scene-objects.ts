@@ -21,16 +21,16 @@ function solid(shape: THREE.Shape, depth: number, color: string) {
   const geometry = new THREE.ExtrudeGeometry(shape, {
     depth,
     bevelEnabled: true,
-    bevelSegments: 2,
+    bevelSegments: 5,
     steps: 1,
     bevelSize: 0.035,
     bevelThickness: 0.025,
-    curveSegments: 8,
+    curveSegments: 16,
   });
   geometry.translate(0, 0, -depth / 2);
   return new THREE.Mesh(
     geometry,
-    new THREE.MeshStandardMaterial({ color, roughness: 0.44, metalness: 0.08 }),
+    new THREE.MeshStandardMaterial({ color, roughness: 0.48, metalness: 0.12 }),
   );
 }
 export function plate(
@@ -57,89 +57,36 @@ export function texturedFace(width: number, height: number, radius: number) {
     );
   return new THREE.Mesh(
     geometry,
-    new THREE.MeshBasicMaterial({ color: "#fffcf5", side: THREE.FrontSide }),
+    new THREE.MeshBasicMaterial({
+      color: "#ffffff",
+      side: THREE.FrontSide,
+      toneMapped: false,
+    }),
   );
 }
 export function makePhone() {
   const group = new THREE.Group();
-  const body = plate(2.73, 5.48, 0.32, INK, 0.37);
+  // A thin graphite frame leaves more room for the screen, with a soft metal edge.
+  const body = plate(2.69, 5.56, 0.18, "#4b4a53", 0.37);
   group.add(body);
-  const edge = plate(2.68, 5.4, 0.21, "#FF873C", 0.35);
-  edge.position.z = -0.03;
-  group.add(edge);
-  const front = plate(2.68, 5.4, 0.08, INK, 0.35);
-  front.position.z = 0.17;
+  const back = plate(2.65, 5.5, 0.06, "#24242b", 0.36);
+  back.position.z = -0.08;
+  group.add(back);
+  const front = plate(2.64, 5.51, 0.045, "#19191f", 0.35);
+  front.position.z = 0.1;
   group.add(front);
-  const screen = texturedFace(2.45, 5.1, 0.25);
-  screen.position.z = 0.237;
+  const screen = texturedFace(2.48, 5.32, 0.28);
+  screen.position.z = 0.151;
   group.add(screen);
-  const button = plate(0.06, 0.56, 0.08, INK, 0.02);
-  button.position.set(1.39, 0.7, 0);
+  const button = plate(0.035, 0.51, 0.055, "#62616c", 0.015);
+  button.position.set(1.365, 0.64, 0);
   group.add(button);
-  for (const y of [0.75, 0.13]) {
-    const volume = plate(0.06, 0.42, 0.08, INK, 0.02);
-    volume.position.set(-1.39, y, 0);
+  for (const y of [0.83, 0.24]) {
+    const volume = plate(0.035, 0.36, 0.055, "#62616c", 0.015);
+    volume.position.set(-1.365, y, 0);
     group.add(volume);
   }
   return { group, screen };
-}
-export function makeCassette() {
-  const group = new THREE.Group();
-  group.add(plate(2.13, 1.38, 0.24, INK));
-  const cover = plate(2.06, 1.31, 0.13, "#FF873C");
-  cover.position.z = 0.13;
-  group.add(cover);
-  const label = plate(1.75, 0.96, 0.045, "#fff5d4", 0.06);
-  label.position.set(0, 0.05, 0.23);
-  group.add(label);
-  const window = plate(1.47, 0.47, 0.04, "#ad93db", 0.19);
-  window.position.set(0, 0.02, 0.28);
-  group.add(window);
-  const reels: THREE.Group[] = [];
-  for (const x of [-0.51, 0.51]) {
-    const reel = new THREE.Group();
-    reel.position.set(x, 0.02, 0.33);
-    const ring = new THREE.Mesh(
-      new THREE.TorusGeometry(0.158, 0.035, 6, 24),
-      new THREE.MeshStandardMaterial({ color: INK }),
-    );
-    reel.add(ring);
-    for (let i = 0; i < 6; i++) {
-      const spoke = new THREE.Mesh(
-        new THREE.BoxGeometry(0.035, 0.28, 0.025),
-        new THREE.MeshStandardMaterial({ color: "#fff8e4" }),
-      );
-      spoke.rotation.z = (i * Math.PI) / 3;
-      reel.add(spoke);
-    }
-    group.add(reel);
-    reels.push(reel);
-  }
-  for (const y of [0.38, -0.31]) {
-    const line = new THREE.Mesh(
-      new THREE.BoxGeometry(1.43, 0.015, 0.012),
-      new THREE.MeshBasicMaterial({ color: INK }),
-    );
-    line.position.set(0, y, 0.3);
-    group.add(line);
-  }
-  for (const x of [-0.84, 0.84]) {
-    const screw = new THREE.Mesh(
-      new THREE.CircleGeometry(0.035, 12),
-      new THREE.MeshBasicMaterial({ color: INK }),
-    );
-    screw.position.set(x, -0.51, 0.215);
-    group.add(screw);
-  }
-  return { group, reels };
-}
-export function makeWordCard() {
-  const group = new THREE.Group();
-  group.add(plate(2.1, 1.4, 0.12, INK, 0.1));
-  const face = texturedFace(2.04, 1.32, 0.08);
-  face.position.z = 0.1;
-  group.add(face);
-  return { group, face };
 }
 export function makeStar(color: string, radius: number) {
   const shape = new THREE.Shape();
@@ -150,5 +97,5 @@ export function makeStar(color: string, radius: number) {
     else shape.lineTo(Math.cos(angle) * r, Math.sin(angle) * r);
   }
   shape.closePath();
-  return solid(shape, 0.2, color);
+  return solid(shape, 0.1, color);
 }

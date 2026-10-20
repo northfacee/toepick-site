@@ -18,13 +18,13 @@ export function Preview() {
     ],
     [
       "조금씩 쌓이는 나의 꾸준함.",
-      "학습 달력과 듣기·독해 밸런스로 공부한 날을 돌아봐요. 완료한 문제는 다시 복습할 수 있어요.",
+      "학습 달력과 Part 2·3·4·5별 정답·오답으로 공부한 날을 돌아봐요. 완료한 문제는 다시 복습할 수 있어요.",
     ],
   ];
   return (
     <section className="preview-section section-wrap" id="preview">
       <div className="preview-copy">
-        <p className="eyebrow">TAKE A LITTLE LOOK</p>
+        <p className="eyebrow">03 / INSIDE TOE-PICK</p>
         <h2>
           내 손안의
           <br />
@@ -32,8 +32,7 @@ export function Preview() {
         </h2>
         <p className="section-description">
           복잡한 준비 없이, 나에게 필요한 공부만.
-          <br />
-          TOE-PICK을 미리 만나보세요.
+          <br />앱 안에서 이어지는 나의 공부 루틴.
         </p>
         <div
           className="preview-tabs"

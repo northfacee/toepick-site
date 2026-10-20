@@ -9,21 +9,21 @@ const modes = [
     icon: Headphones,
     screen: 4,
     caption: "듣고, 고르고. 귀가 열리는 작은 루틴.",
-    tag: "LISTENING MIX",
+    tag: "LISTENING",
   },
   {
     label: "독해",
     icon: BookOpen,
     screen: 1,
     caption: "한 문장씩 이해하고, 내 실력으로.",
-    tag: "ONE MORE PICK",
+    tag: "READING",
   },
   {
     label: "단어",
     icon: Star,
     screen: 2,
     caption: "오늘 만난 표현, 내일의 자신감.",
-    tag: "MAKE IT YOURS",
+    tag: "MY WORDS",
   },
 ];
 export function HeroShowcase() {
@@ -102,10 +102,12 @@ export function HeroShowcase() {
           <span />
         </div>
         <span className="showcase-sticker" aria-hidden="true">
-          SMALL STEPS.
-          <br />
-          <b>BIG ENERGY!</b>
-          <Star size={20} />
+          <span className="sticker-icon">
+            <Headphones size={18} />
+          </span>
+          <span>
+            오늘도, 한 문제씩.<small>MAKE IT A DAILY THING.</small>
+          </span>
         </span>
         <div className="showcase-canvas" ref={host} aria-hidden="true" />
         {state !== "ready" && (
@@ -117,12 +119,12 @@ export function HeroShowcase() {
           </div>
         )}
         <span className="showcase-side-label" aria-hidden="true">
-          YOUR PACE / YOUR PICK
+          PICK YOUR PACE.
         </span>
         <span className="showcase-drag-hint">
           <MoveHorizontal size={15} />
           {state === "ready"
-            ? "드래그해서 돌려보세요"
+            ? "가볍게 드래그해 보세요"
             : "아래에서 화면을 골라보세요"}
         </span>
       </div>

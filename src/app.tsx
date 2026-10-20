@@ -7,17 +7,14 @@ import {
   Check,
   Play,
   CalendarDays,
-  Volume2,
-  Smartphone,
   Pause,
 } from "lucide-react";
-import { useRef } from "react";
 import { HeroShowcase } from "./hero-showcase";
-import { useCardTilt } from "./use-card-tilt";
 import { Preview } from "./app-preview";
 import { Privacy } from "./privacy";
 import { BASE } from "./site-config";
 import { SupportContact } from "./support-contact";
+import { StoreLinks } from "./store-links";
 
 function Brand() {
   return (
@@ -29,143 +26,155 @@ function Brand() {
     </a>
   );
 }
-function Cassette() {
-  return (
-    <div className="cassette" aria-hidden="true">
-      <div className="cassette-top">
-        <span>TOE-PICK MIX</span>
-        <span>VOL. 02</span>
-      </div>
-      <div className="cassette-window">
-        <span className="reel">✳</span>
-        <div className="tape-lines" />
-        <span className="reel">✳</span>
-      </div>
-      <div className="cassette-bottom">
-        <span>SIDE A / DAILY LISTENING</span>
-        <Volume2 size={16} />
-      </div>
-    </div>
-  );
-}
 function Landing() {
-  const main = useRef<HTMLElement>(null);
-  useCardTilt(main);
   return (
-    <main id="main" ref={main}>
+    <main id="main">
       <section className="hero section-wrap">
         <div className="hero-copy">
           <div className="hero-badge">
-            <span /> A LITTLE EVERY DAY
+            <span /> NOW AVAILABLE · 정식 출시
           </div>
+          <p className="hero-kicker">토익 공부에도, 내 취향과 내 페이스.</p>
           <h1>
             매일 듣고,
             <br />
-            풀고,{" "}
-            <span className="highlight">
-              내 것으로
-              <svg viewBox="0 0 350 20" aria-hidden="true">
-                <path d="M5 13 Q170 -2 343 9 M22 19 Q182 4 323 17" />
-              </svg>
-            </span>
+            풀고, <span className="highlight">내 것으로</span>
             <span className="hero-period">.</span>
           </h1>
           <p className="hero-description">
-            거창한 계획보다, 오늘의 작은 한 문제.
+            오늘의 LC부터 RC, 해설과 단어 복습까지.
             <br />
-            듣기부터 독해까지 나만의 토익 루틴을 만들어봐요.
+            작은 성취가 쌓이는 나만의 토익 루틴을 시작해요.
           </p>
-          <a className="button primary" href="#preview">
-            앱 미리보기 <ArrowUpRight size={21} />
-          </a>
+          <StoreLinks compact />
           <div className="hero-meta">
             <span>
-              <Check size={15} /> 회원가입 없이
+              <Check size={15} /> 회원가입 없이 바로 시작
             </span>
             <span>
-              <Check size={15} /> 나만의 학습 속도로
+              <Check size={15} /> 무료 다운로드
             </span>
           </div>
+          <a className="hero-preview-link" href="#preview">
+            앱 미리보기 <ArrowRight size={17} />
+          </a>
         </div>
         <HeroShowcase />
       </section>
-      <div className="ticker" aria-hidden="true">
-        <div>
-          LISTEN A LITTLE <span>✳</span> LEARN A LITTLE <span>✳</span> LOVE YOUR
-          PROGRESS <span>✳</span> LISTEN A LITTLE <span>✳</span> LEARN A LITTLE{" "}
-          <span>✳</span>
+      <div className="routine-strip">
+        <div className="section-wrap">
+          <span className="strip-label">YOUR DAILY PICK</span>
+          <span>
+            <Headphones size={18} /> 듣기 <b>Part 2·3·4</b>
+          </span>
+          <span>
+            <BookOpen size={18} /> 독해 <b>Part 5</b>
+          </span>
+          <span>
+            <Star size={18} /> 나만의 단어장
+          </span>
+          <span>
+            <CalendarDays size={18} /> 매일의 학습 기록
+          </span>
         </div>
       </div>
       <section className="practice-section section-wrap" id="practice">
         <div className="section-heading">
           <div>
-            <p className="eyebrow">TODAY’S LITTLE ROUTINE</p>
+            <p className="eyebrow">01 / DAILY PRACTICE</p>
             <h2>
-              부담은 가볍게.
-              <br />
-              공부는 알차게.
+              오늘의 토익,
+              <br />이 두 장이면 준비 끝.
             </h2>
           </div>
           <p>
-            매일 만나는 듣기 10문제, 독해 20문제.
+            듣고, 읽고, 이해하는 시간.
             <br />
-            작은 루틴으로 영어와 조금 더 가까워져요.
+            매일 새로운 문제로 공부의 리듬을 만들어요.
           </p>
         </div>
         <div className="drill-grid">
           <article className="feature-card mint">
             <div className="card-heading">
-              <span className="pill">PART 2 · LISTENING</span>
-              <span className="card-count">
-                10 <small>QUESTIONS</small>
-              </span>
+              <span className="pill">PART 2 · 3 · 4</span>
+              <Headphones size={28} />
             </div>
-            <h3>영어에 귀를 기울이는 시간.</h3>
-            <p>
-              다양한 억양을 듣고 알맞은 응답을 골라요.
-              <br />
-              제출 후 대본과 해설로 놓친 표현까지 확인해요.
+            <p className="feature-name">
+              Listening<span>귀가 트이는 오늘의 한 세트.</span>
             </p>
-            <Cassette />
-            <div className="card-bottom">
-              <span>
-                <Headphones size={17} /> 듣고, 고르고, 다시 듣고.
+            <p>
+              질문·응답부터 대화와 담화까지.
+              <br />
+              듣고 고른 뒤, 대본과 한국어 해설로 다시 이해해요.
+            </p>
+            <div className="listening-parts">
+              <div>
+                <b>02</b>
+                <span>
+                  질문·응답<small>10문제</small>
+                </span>
+              </div>
+              <div>
+                <b>03</b>
+                <span>
+                  대화<small>3문제</small>
+                </span>
+              </div>
+              <div>
+                <b>04</b>
+                <span>
+                  담화<small>3문제</small>
+                </span>
+              </div>
+            </div>
+            <div className="wave-player" aria-hidden="true">
+              <span className="player-play">
+                <Play size={20} fill="currentColor" />
               </span>
-              <ArrowUpRight size={25} />
+              <div className="wave-bars">
+                {Array.from({ length: 33 }, (_, i) => (
+                  <i
+                    key={i}
+                    style={{ height: `${12 + ((i * 17 + 9) % 35)}px` }}
+                  />
+                ))}
+              </div>
+              <span className="player-side">SIDE A</span>
+            </div>
+            <div className="card-bottom">
+              <span>30초 미리보기로 Part 3·4도 차근차근.</span>
+              <span className="mini-tag">16문제 / DAY</span>
             </div>
           </article>
-          <article className="feature-card lavender">
+          <article className="feature-card lime">
             <div className="card-heading">
-              <span className="pill">PART 5 · READING</span>
-              <span className="card-count">
-                20 <small>QUESTIONS</small>
-              </span>
+              <span className="pill">PART 5</span>
+              <BookOpen size={28} />
             </div>
-            <h3>빈칸을 채우며 실력도 채워요.</h3>
-            <p>
-              문법부터 어휘, 비즈니스 표현까지.
-              <br />
-              한국어 해설로 정답의 이유를 이해해요.
+            <p className="feature-name">
+              Reading<span>빈칸 하나, 확실한 이해 하나.</span>
             </p>
-            <div className="paper-demo">
-              <div className="paper-holes" />
-              <small>ONE SENTENCE AT A TIME</small>
+            <p>
+              문법·어휘·비즈니스 표현을 한 문장씩.
+              <br />
+              정답의 근거와 헷갈린 보기까지 해설로 짚어봐요.
+            </p>
+            <div className="reading-paper">
+              <span className="paper-tag">TODAY’S QUESTION</span>
               <p>
                 A little practice makes
-                <br />a <span>big difference.</span>
+                <br />a <mark>big difference.</mark>
               </p>
               <div>
                 <span>
-                  <Check size={15} /> 한 문장씩
+                  <Check size={16} /> 정답의 이유까지 내 것으로
                 </span>
-                <span>내 것으로!</span>
+                <span>✓</span>
               </div>
             </div>
             <div className="card-bottom">
-              <span>
-                <BookOpen size={17} /> 풀고, 이해하고, 기억하고.
-              </span>
-              <ArrowUpRight size={25} />
+              <span>풀고, 이해하고, 기억하고.</span>
+              <span className="mini-tag">20문제 / DAY</span>
             </div>
           </article>
         </div>
@@ -173,20 +182,20 @@ function Landing() {
       <section className="review-section section-wrap">
         <div className="section-heading">
           <div>
-            <p className="eyebrow">MAKE IT YOURS</p>
-            <h2>풀고 끝? 내 것이 될 때까지.</h2>
+            <p className="eyebrow">02 / MAKE IT YOURS</p>
+            <h2>풀고 나서가 진짜 공부니까.</h2>
           </div>
-          <span className="hand-note">작은 복습의 힘 ↙</span>
+          <p>문제 한 세트에서 끝나지 않는 루틴.</p>
         </div>
         <div className="review-grid">
           <article className="review-card pink">
-            <Star size={28} />
+            <Star size={27} />
             <span className="review-index">01</span>
-            <h3>마음에 담은 단어</h3>
+            <h3>기억하고 싶은 단어는 쏙.</h3>
             <p>
-              기억하고 싶은 표현은 별표로 쏙.
+              해설에서 만난 표현을 즐겨찾기에.
               <br />
-              나만의 단어장에 차곡차곡 모아요.
+              예문과 함께 내 단어장에 모아요.
             </p>
             <div className="vocab-sticker">
               <span>in advance</span>
@@ -194,13 +203,14 @@ function Landing() {
               <Star size={19} fill="currentColor" />
             </div>
           </article>
-          <article className="review-card yellow">
-            <Play size={28} />
+          <article className="review-card lavender">
+            <Play size={27} />
             <span className="review-index">02</span>
-            <h3>잠깐 쉬어가도 괜찮아</h3>
+            <h3>내 속도로, 이어서.</h3>
             <p>
-              풀던 문제는 이어서, 끝낸 문제는 다시.
-              <br />내 속도로 공부를 이어가요.
+              풀던 문제는 이어풀고, 오답은 다시.
+              <br />
+              잠깐 쉬어가도 루틴은 이어져요.
             </p>
             <div className="continue-demo">
               <span>
@@ -212,14 +222,14 @@ function Landing() {
               </b>
             </div>
           </article>
-          <article className="review-card orange">
-            <CalendarDays size={28} />
+          <article className="review-card cream">
+            <CalendarDays size={27} />
             <span className="review-index">03</span>
-            <h3>눈에 보이는 꾸준함</h3>
+            <h3>꾸준함이 눈에 보이게.</h3>
             <p>
-              공부한 날과 학습 밸런스를 한눈에.
+              학습 달력과 파트별 정답·오답 기록.
               <br />
-              어제의 노력이 오늘의 자신감으로.
+              쌓인 공부를 돌아보고 다시 도전해요.
             </p>
             <div className="week-demo">
               {["월", "화", "수", "목", "금"].map((d, i) => (
@@ -242,32 +252,21 @@ function Landing() {
             height="88"
             loading="lazy"
           />
-          <p className="eyebrow">YOUR DAILY ENGLISH SIDEKICK</p>
+          <p className="eyebrow">SMALL STEPS. YOUR OWN PACE.</p>
           <h2>
             오늘의 작은 시작,
             <br />
             TOE-PICK과 함께.
           </h2>
           <p>
-            매일 조금씩, 영어가 내 편이 되는 시간.
-            <br />곧 앱에서 만나요!
+            첫 문제를 고르는 순간부터, 나만의 루틴이 시작돼요.
+            <br />
+            지금 앱에서 만나요.
           </p>
-          <div className="store-status">
-            <span>
-              <Smartphone size={22} />
-              <span>
-                <b>App Store</b>
-                <small>출시 준비 중</small>
-              </span>
-            </span>
-            <span>
-              <Play size={22} />
-              <span>
-                <b>Google Play</b>
-                <small>출시 준비 중</small>
-              </span>
-            </span>
-          </div>
+          <StoreLinks />
+          <p className="download-note">
+            iOS · Android에서 무료 다운로드 · 앱 내 광고 포함
+          </p>
         </div>
         <span className="closing-star" aria-hidden="true">
           ✳
@@ -289,7 +288,7 @@ export function App({ privacy = false }: { privacy?: boolean }) {
             <a href={`${BASE}#practice`}>앱 소개</a>
             <a href={`${BASE}#preview`}>미리보기</a>
             <a className="nav-status" href={`${BASE}#release`}>
-              COMING SOON <ArrowUpRight size={15} />
+              앱 다운로드 <ArrowUpRight size={16} />
             </a>
           </nav>
         </div>

@@ -4,7 +4,7 @@ export function EnglishPrivacy() {
   return (
     <section id="privacy-en" className="policy-language-section" lang="en" aria-labelledby="privacy-en-title">
       <h1 id="privacy-en-title">Privacy Policy</h1>
-      <p className="date">Effective date and last updated: September 22, 2026</p>
+      <p className="date">Effective date and last updated: October 15, 2026</p>
       <p>
         northface (the “Operator”) processes information for ToePick (shown in
         the app as TOE-PICK; Android package: com.toepick) as described below.
@@ -73,6 +73,15 @@ export function EnglishPrivacy() {
       </p>
 
       <h2>2. AI and third-party services</h2>
+      <p>
+        <strong>Expo EAS Observe:</strong> New installed builds containing this SDK
+        send startup and navigation timings, app version, device and operating system
+        information, session identifiers, and JavaScript errors and code locations
+        to Expo to diagnose performance and reliability. Routes use patterns, with
+        practice session, question, and vocabulary identifiers excluded from route parameters.
+        Recovered request and action failures use fixed operation names rather than
+        response bodies or user input.
+      </p>
       <p>
         <strong>Sentry:</strong> To diagnose app errors, Sentry may process
         exception messages, code locations, app version, operating system,

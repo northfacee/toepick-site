@@ -72,15 +72,23 @@ test("privacy direct navigation and refresh without JavaScript", async ({
   await page.setViewportSize({ width: 360, height: 780 });
   await page.goto("http://127.0.0.1:4173/privacy/");
   await page.reload();
-  expect(await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth)).toBe(true);
+  expect(
+    await page.evaluate(
+      () => document.documentElement.scrollWidth <= window.innerWidth,
+    ),
+  ).toBe(true);
   await expect(
     page.getByRole("heading", { name: "개인정보처리방침", exact: true }),
   ).toBeVisible();
   await expect(page.locator("main")).toContainText("Speechify");
   await expect(page.locator("main")).toContainText("LangSmith");
-  await expect(page.getByRole("heading", { name: "Privacy Policy", exact: true })).toBeVisible();
+  await expect(
+    page.getByRole("heading", { name: "Privacy Policy", exact: true }),
+  ).toBeVisible();
   await expect(page.locator("#privacy-en")).toContainText("Google Mobile Ads");
-  await expect(page.locator("#privacy-en")).toContainText("no scheduled automatic deletion");
+  await expect(page.locator("#privacy-en")).toContainText(
+    "no scheduled automatic deletion",
+  );
   await page.getByRole("link", { name: "English", exact: true }).click();
   await expect(page).toHaveURL(/privacy\/#privacy-en$/);
   await page.getByRole("link", { name: "← Back to ToePick" }).click();
@@ -103,7 +111,32 @@ test("navigation, asset delivery and release status", async ({ page }) => {
   await expect(page).toHaveURL(/privacy\/$/);
   await page.reload();
   await page.getByRole("link", { name: "← ToePick 소개로 돌아가기" }).click();
-  await expect(page.getByText("출시 준비 중", { exact: true })).toHaveCount(2);
+  await expect(
+    page.getByText(/COMING SOON|출시 준비 중|곧 앱에서 만나요/i),
+  ).toHaveCount(0);
+  const downloads = page.getByRole("link", {
+    name: "App Store에서 다운로드 (새 창)",
+    exact: true,
+  });
+  await expect(downloads).toHaveCount(2);
+  await expect(downloads.first()).toHaveAttribute(
+    "href",
+    "https://apps.apple.com/kr/app/id6810698104",
+  );
+  await expect(
+    page
+      .getByRole("link", {
+        name: "Google Play에서 다운로드 (새 창)",
+        exact: true,
+      })
+      .first(),
+  ).toHaveAttribute(
+    "href",
+    "https://play.google.com/store/apps/details?id=com.toepick&hl=ko",
+  );
+  await expect(page.locator(".listening-parts")).toContainText("담화");
+  await page.getByRole("tab", { name: "기록", exact: true }).click();
+  await expect(page.locator(".record-scores")).toContainText("Part 4");
   expect(
     await page
       .locator("img")
