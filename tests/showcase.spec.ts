@@ -1,104 +1,46 @@
 import { test, expect } from "@playwright/test";
 
-test("WebGL scene, modes, drag bounds, return and offscreen pause", async ({
+test("2D hero showcase renders immediately without WebGL canvas and switches modes", async ({
   page,
 }) => {
   await page.setViewportSize({ width: 1440, height: 1000 });
   const errors: string[] = [];
+  const threeRequests: string[] = [];
   page.on("pageerror", (e) => errors.push(e.message));
+  page.on("request", (r) => {
+    if (r.url().includes("hero-scene-")) threeRequests.push(r.url());
+  });
+
   await page.goto("./");
-  const showcase = page.locator(".hero-showcase"),
-    host = page.locator(".showcase-canvas");
-  await expect(showcase).toHaveAttribute("data-state", "ready");
-  await expect(host).toHaveAttribute("data-rendering", "active");
-  expect(
-    await host
-      .locator("canvas")
-      .evaluate((el) => !!(el as HTMLCanvasElement).getContext("webgl2")),
-  ).toBe(true);
+  const showcase = page.locator(".hero-showcase");
+  const fallback = page.locator(".showcase-fallback");
+  await expect(showcase).toHaveAttribute("data-state", "static");
+  await expect(fallback).toBeVisible();
+  await expect(page.locator(".showcase-canvas canvas")).toHaveCount(0);
+  await expect(fallback).toContainText("LISTENING MIX");
+
   const group = page.getByRole("group", { name: "3D 앱 미리보기 모드" });
+  const expectedHeaders = ["LISTENING MIX", "READING", "MY WORDS"];
   for (const [index, name] of ["듣기", "독해", "단어"].entries()) {
     const button = group.getByRole("button", { name, exact: true });
     await button.focus();
     await page.keyboard.press("Enter");
     await expect(button).toHaveAttribute("aria-pressed", "true");
     await expect(showcase).toHaveAttribute("data-selected-mode", String(index));
-    await expect(host).toHaveAttribute("data-mode", String(index));
+    await expect(fallback).toContainText(expectedHeaders[index]);
   }
-  const box = await host.boundingBox();
-  if (!box) throw new Error("Missing stage");
-  await page.mouse.move(box.x + box.width / 2, box.y + box.height / 2);
-  await page.mouse.down();
-  await page.mouse.move(box.x + box.width + 80, box.y + box.height / 2, {
-    steps: 15,
-  });
-  await expect
-    .poll(async () => Number(await host.getAttribute("data-drag-rotation")))
-    .toBeGreaterThan(0.35);
-  expect(Number(await host.getAttribute("data-rotation"))).toBeLessThanOrEqual(
-    (Math.PI * 25) / 180 + 0.001,
-  );
-  await page.mouse.up();
-  await expect
-    .poll(async () =>
-      Math.abs(Number(await host.getAttribute("data-drag-rotation"))),
-    )
-    .toBeLessThan(0.015);
-  await page.mouse.move(box.x + box.width / 2, box.y + box.height / 2);
-  await page.mouse.down();
-  await page.mouse.move(box.x - 100, box.y + box.height / 2, { steps: 12 });
-  await expect
-    .poll(async () => Number(await host.getAttribute("data-drag-rotation")))
-    .toBeLessThan(-0.35);
-  expect(
-    Number(await host.getAttribute("data-rotation")),
-  ).toBeGreaterThanOrEqual((-Math.PI * 25) / 180 - 0.001);
-  await page.mouse.up();
-  await page.evaluate(() => window.scrollTo({ top: 380, behavior: "instant" }));
-  await expect
-    .poll(async () => Number(await host.getAttribute("data-scroll")))
-    .toBeGreaterThan(0.1);
-  await page.evaluate(() =>
-    window.scrollTo({ top: document.body.scrollHeight, behavior: "instant" }),
-  );
-  await expect(host).toHaveAttribute("data-rendering", "paused");
-  await page.evaluate(() => window.scrollTo({ top: 0, behavior: "instant" }));
-  await expect(host).toHaveAttribute("data-rendering", "active");
-  expect(errors).toEqual([]);
-});
 
-test("motion preference prevents 3D loading and reacts to live changes", async ({
-  page,
-}) => {
-  const chunks: string[] = [];
-  page.on("request", (r) => {
-    if (r.url().includes("hero-scene-")) chunks.push(r.url());
-  });
-  await page.emulateMedia({ reducedMotion: "reduce" });
-  await page.goto("./");
-  await expect(page.locator(".showcase-fallback")).toBeVisible();
-  await expect(page.locator(".showcase-canvas canvas")).toHaveCount(0);
-  await page
-    .getByRole("group", { name: "3D 앱 미리보기 모드" })
-    .getByRole("button", { name: "단어", exact: true })
-    .click();
-  await expect(page.locator(".showcase-fallback")).toContainText("MY WORDS");
-  expect(chunks).toEqual([]);
-  await page.emulateMedia({ reducedMotion: "no-preference" });
-  await expect(page.locator(".hero-showcase")).toHaveAttribute(
-    "data-state",
-    "ready",
-  );
-  await page.emulateMedia({ reducedMotion: "reduce" });
-  await expect(page.locator(".showcase-canvas canvas")).toHaveCount(0);
-  await expect(page.locator(".showcase-fallback")).toContainText("MY WORDS");
+  expect(threeRequests).toEqual([]);
+  expect(errors).toEqual([]);
 });
 
 test("privacy never requests 3D modules or textures", async ({ page }) => {
   const requests: string[] = [];
   page.on("request", (r) => requests.push(r.url()));
   await page.goto("privacy/");
-  await expect(page.getByRole("heading", { name: "개인정보처리방침", exact: true })).toBeVisible();
+  await expect(
+    page.getByRole("heading", { name: "개인정보처리방침", exact: true }),
+  ).toBeVisible();
   expect(
     requests.filter(
       (url) => url.includes("hero-scene-") || url.includes("/showcase/"),
@@ -106,66 +48,7 @@ test("privacy never requests 3D modules or textures", async ({ page }) => {
   ).toEqual([]);
 });
 
-test("unsupported WebGL keeps the static phone and working controls", async ({
-  page,
-}) => {
-  await page.addInitScript(
-    `const original = HTMLCanvasElement.prototype.getContext; HTMLCanvasElement.prototype.getContext = function(type, ...args) { if (type === 'webgl2' || type === 'webgl' || type === 'experimental-webgl') return null; return original.call(this, type, ...args); };`,
-  );
-  await page.goto("./");
-  await expect(page.locator(".hero-showcase")).toHaveAttribute(
-    "data-state",
-    "fallback",
-  );
-  await page
-    .getByRole("group", { name: "3D 앱 미리보기 모드" })
-    .getByRole("button", { name: "독해", exact: true })
-    .click();
-  await expect(page.locator(".showcase-fallback")).toContainText("completed");
-});
-
-for (const resource of [
-  "**/assets/hero-scene-*.js",
-  "**/showcase/listening.svg",
-]) {
-  test(`failed resource uses static fallback: ${resource}`, async ({
-    page,
-  }) => {
-    await page.route(resource, (route) => route.abort());
-    await page.goto("./");
-    await expect(page.locator(".hero-showcase")).toHaveAttribute(
-      "data-state",
-      "fallback",
-    );
-    await expect(page.locator(".showcase-fallback")).toBeVisible();
-    await expect(page.locator(".showcase-canvas canvas")).toHaveCount(0);
-  });
-}
-
-test("lost WebGL context disposes scene and preserves page navigation", async ({
-  page,
-}) => {
-  await page.goto("./");
-  await expect(page.locator(".hero-showcase")).toHaveAttribute(
-    "data-state",
-    "ready",
-  );
-  await page.locator(".showcase-canvas canvas").evaluate((el) => {
-    const gl = (el as HTMLCanvasElement).getContext("webgl2");
-    const lose = gl?.getExtension("WEBGL_lose_context");
-    if (!lose) throw new Error("WebGL context loss extension missing");
-    lose.loseContext();
-  });
-  await expect(page.locator(".hero-showcase")).toHaveAttribute(
-    "data-state",
-    "fallback",
-  );
-  await expect(page.locator(".showcase-canvas canvas")).toHaveCount(0);
-  await page.getByRole("link", { name: "앱 미리보기", exact: true }).click();
-  await expect(page).toHaveURL(/#preview$/);
-});
-
-test("mobile touch scroll remains native over the 3D canvas", async ({
+test("mobile touch scroll works cleanly over the 2D hero showcase", async ({
   browser,
 }) => {
   const context = await browser.newContext({
@@ -175,17 +58,10 @@ test("mobile touch scroll remains native over the 3D canvas", async ({
   });
   const page = await context.newPage();
   await page.goto("./");
-  await expect(page.locator(".hero-showcase")).toHaveAttribute(
-    "data-state",
-    "ready",
-  );
+  await expect(page.locator(".showcase-fallback")).toBeVisible();
   await page.evaluate(() => window.scrollTo({ top: 350, behavior: "instant" }));
-  const canvas = page.locator(".showcase-canvas canvas");
-  expect(await canvas.evaluate((el) => getComputedStyle(el).touchAction)).toBe(
-    "pan-y",
-  );
-  const bounds = await canvas.boundingBox();
-  if (!bounds) throw new Error("Missing mobile canvas");
+  const bounds = await page.locator(".showcase-fallback").boundingBox();
+  if (!bounds) throw new Error("Missing mobile showcase");
   const client = await context.newCDPSession(page);
   const x = 195,
     y = Math.min(bounds.y + bounds.height * 0.6, 730);
@@ -213,70 +89,36 @@ test("mobile touch scroll remains native over the 3D canvas", async ({
   await context.close();
 });
 
-test("visibility lifecycle pauses and resumes the render loop", async ({
-  page,
-}) => {
-  await page.goto("./");
-  const host = page.locator(".showcase-canvas");
-  await expect(host).toHaveAttribute("data-rendering", "active");
-  // Deterministic lifecycle simulation: headless tabs need not become hidden.
-  await page.evaluate(() => {
-    Object.defineProperty(document, "hidden", {
-      configurable: true,
-      value: true,
-    });
-    document.dispatchEvent(new Event("visibilitychange"));
-  });
-  await expect(host).toHaveAttribute("data-rendering", "paused");
-  await page.evaluate(() => {
-    Reflect.deleteProperty(document, "hidden");
-    document.dispatchEvent(new Event("visibilitychange"));
-  });
-  await expect(host).toHaveAttribute("data-rendering", "active");
-});
-
-test("English and Japanese 3D showcase loads localized SVG textures", async ({
+test("English and Japanese 2D hero showcase switches modes cleanly", async ({
   page,
 }) => {
   await page.setViewportSize({ width: 1440, height: 1000 });
-  const loadedTextures: string[] = [];
-  page.on("response", (r) => {
-    if (r.url().includes("/showcase/") && r.status() === 200) {
-      loadedTextures.push(new URL(r.url()).pathname);
-    }
-  });
 
   await page.goto("en/");
   await expect(page.locator(".hero-showcase")).toHaveAttribute(
     "data-state",
-    "ready",
+    "static",
   );
-  expect(loadedTextures).toContain("/showcase/en/listening.svg");
-  expect(loadedTextures).toContain("/showcase/en/reading.svg");
-  expect(loadedTextures).toContain("/showcase/en/words.svg");
-
   const enGroup = page.getByRole("group", { name: "3D app preview mode" });
   await enGroup.getByRole("button", { name: "Reading", exact: true }).click();
-  await expect(page.locator(".showcase-canvas")).toHaveAttribute(
-    "data-mode",
+  await expect(page.locator(".hero-showcase")).toHaveAttribute(
+    "data-selected-mode",
     "1",
   );
+  await expect(page.locator(".showcase-fallback")).toContainText("READING");
 
   await page.goto("ja/");
   await expect(page.locator(".hero-showcase")).toHaveAttribute(
     "data-state",
-    "ready",
+    "static",
   );
-  expect(loadedTextures).toContain("/showcase/ja/listening.svg");
-  expect(loadedTextures).toContain("/showcase/ja/reading.svg");
-  expect(loadedTextures).toContain("/showcase/ja/words.svg");
-
   const jaGroup = page.getByRole("group", {
     name: "3Dアプリプレビューモード",
   });
   await jaGroup.getByRole("button", { name: "単語", exact: true }).click();
-  await expect(page.locator(".showcase-canvas")).toHaveAttribute(
-    "data-mode",
+  await expect(page.locator(".hero-showcase")).toHaveAttribute(
+    "data-selected-mode",
     "2",
   );
+  await expect(page.locator(".showcase-fallback")).toContainText("MY WORDS");
 });
