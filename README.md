@@ -6,7 +6,7 @@ React **19.3.0** · TypeScript · Vite **8.3.0** 기반 한국어·영어·일�
 
 - **첫 화면 히어로 쇼케이스를 2D 정적 폰 미리보기로 전환 및 3D 코드 완전 제거 (`src/hero-showcase.tsx`, `tests/showcase.spec.ts`)**:
   - 초기 렌더링 직후 Three.js/WebGL 캔버스로 교체되면서 발생하던 약 0.1초간의 2D→3D 화면 전환 깜빡임을 없애기 위해 `src/three/`, `public/showcase/`, `three` 패키지 의존성 및 3D 캔버스/드래그 스타일을 완전히 제거하고, 첫 화면에서 즉시 선명한 2D 휴대폰 프리뷰(`Phone`)만 표시하도록 단순화했다.
-  - 상단 `[듣기] [독해] [단어]` (`Listening` / `Reading` / `Words`, `リスニング` / `リーディング` / `単語`) 모드 전환 버튼은 그대로 유지하여 2D 휴대폰 화면이 즉시 전환된다.
+  - 상단 `[듣기] [독해] [단어]` (`Listening` / `Reading` / `Words`, `リスニング` / `リーディング` / `単語`) 모드 전환 버튼은 그대로 유지하며, `독해`·`단어` 화면의 휴대폰 크기(`width`·`height`)도 `듣기` 휴대폰 크기(`250px × 534px`, `.phone-content` `418px`)와 1px 오차 없이 동일하게 맞췄다.
 - **언어별 정적 경로 6종 프리렌더링 (`scripts/render.tsx`, `vite.config.ts`, `scripts/prepare-pages.mjs`)**:
   - 한국어(기본): `/` (`index.html`), `/privacy/` (`privacy/index.html`)
   - 영어: `/en/` (`en/index.html`), `/en/privacy/` (`en/privacy/index.html`)

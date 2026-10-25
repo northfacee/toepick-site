@@ -21,6 +21,12 @@ test("2D hero showcase renders immediately without WebGL canvas and switches mod
 
   const group = page.getByRole("group", { name: "3D 앱 미리보기 모드" });
   const expectedHeaders = ["LISTENING MIX", "READING", "MY WORDS"];
+  const phone = page.locator(".showcase-fallback > .phone");
+  const phoneContent = page.locator(".showcase-fallback > .phone > .phone-content");
+  const baseSize = await phone.evaluate((el) => ({
+    width: (el as HTMLElement).offsetWidth,
+    height: (el as HTMLElement).offsetHeight,
+  }));
   for (const [index, name] of ["듣기", "독해", "단어"].entries()) {
     const button = group.getByRole("button", { name, exact: true });
     await button.focus();
@@ -28,6 +34,15 @@ test("2D hero showcase renders immediately without WebGL canvas and switches mod
     await expect(button).toHaveAttribute("aria-pressed", "true");
     await expect(showcase).toHaveAttribute("data-selected-mode", String(index));
     await expect(fallback).toContainText(expectedHeaders[index]);
+    const currentSize = await phone.evaluate((el) => ({
+      width: (el as HTMLElement).offsetWidth,
+      height: (el as HTMLElement).offsetHeight,
+    }));
+    expect(currentSize).toEqual(baseSize);
+    const fits = await phoneContent.evaluate(
+      (el) => el.scrollHeight <= el.clientHeight,
+    );
+    expect(fits).toBe(true);
   }
 
   expect(threeRequests).toEqual([]);
@@ -99,13 +114,29 @@ test("English and Japanese 2D hero showcase switches modes cleanly", async ({
     "data-state",
     "static",
   );
+  const phone = page.locator(".showcase-fallback > .phone");
+  const phoneContent = page.locator(".showcase-fallback > .phone > .phone-content");
+  const enBaseSize = await phone.evaluate((el) => ({
+    width: (el as HTMLElement).offsetWidth,
+    height: (el as HTMLElement).offsetHeight,
+  }));
   const enGroup = page.getByRole("group", { name: "3D app preview mode" });
-  await enGroup.getByRole("button", { name: "Reading", exact: true }).click();
-  await expect(page.locator(".hero-showcase")).toHaveAttribute(
-    "data-selected-mode",
-    "1",
-  );
-  await expect(page.locator(".showcase-fallback")).toContainText("READING");
+  for (const [index, name] of ["Listening", "Reading", "Words"].entries()) {
+    await enGroup.getByRole("button", { name, exact: true }).click();
+    await expect(page.locator(".hero-showcase")).toHaveAttribute(
+      "data-selected-mode",
+      String(index),
+    );
+    expect(
+      await phone.evaluate((el) => ({
+        width: (el as HTMLElement).offsetWidth,
+        height: (el as HTMLElement).offsetHeight,
+      })),
+    ).toEqual(enBaseSize);
+    expect(
+      await phoneContent.evaluate((el) => el.scrollHeight <= el.clientHeight),
+    ).toBe(true);
+  }
 
   await page.goto("ja/");
   await expect(page.locator(".hero-showcase")).toHaveAttribute(
@@ -115,10 +146,20 @@ test("English and Japanese 2D hero showcase switches modes cleanly", async ({
   const jaGroup = page.getByRole("group", {
     name: "3Dアプリプレビューモード",
   });
-  await jaGroup.getByRole("button", { name: "単語", exact: true }).click();
-  await expect(page.locator(".hero-showcase")).toHaveAttribute(
-    "data-selected-mode",
-    "2",
-  );
-  await expect(page.locator(".showcase-fallback")).toContainText("MY WORDS");
+  for (const [index, name] of ["リスニング", "リーディング", "単語"].entries()) {
+    await jaGroup.getByRole("button", { name, exact: true }).click();
+    await expect(page.locator(".hero-showcase")).toHaveAttribute(
+      "data-selected-mode",
+      String(index),
+    );
+    expect(
+      await phone.evaluate((el) => ({
+        width: (el as HTMLElement).offsetWidth,
+        height: (el as HTMLElement).offsetHeight,
+      })),
+    ).toEqual(enBaseSize);
+    expect(
+      await phoneContent.evaluate((el) => el.scrollHeight <= el.clientHeight),
+    ).toBe(true);
+  }
 });
