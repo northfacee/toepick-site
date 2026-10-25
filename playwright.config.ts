@@ -1,14 +1,18 @@
 import { defineConfig } from "@playwright/test";
+
+const port = process.env.PLAYWRIGHT_PORT || "4173";
+const baseURL = `http://127.0.0.1:${port}/`;
+
 export default defineConfig({
   testDir: "./tests",
   use: {
-    baseURL: "http://127.0.0.1:4173/",
+    baseURL,
     browserName: "chromium",
   },
   webServer: {
-    command: "npm run preview -- --port 4173",
-    url: "http://127.0.0.1:4173/",
-    reuseExistingServer: !process.env.CI,
+    command: `npm run preview -- --port ${port} --strictPort`,
+    url: baseURL,
+    reuseExistingServer: !process.env.CI && !process.env.PLAYWRIGHT_PORT,
   },
   reporter: "list",
 });

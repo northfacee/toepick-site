@@ -1,17 +1,42 @@
 import { mkdir, writeFile } from "node:fs/promises";
+import { dirname } from "node:path";
 import { renderToString } from "react-dom/server";
 import { App } from "../src/app";
-import { BASE } from "../src/site-config";
-await mkdir("privacy", { recursive: true });
-for (const privacy of [false, true]) {
-  const title = privacy
-    ? "개인정보처리방침 | TOE-PICK"
-    : "TOE-PICK — 매일 듣고, 풀고, 내 것으로.";
-  const description = privacy
-    ? "TOE-PICK의 정보 처리, 외부 서비스, 보관 및 삭제 안내."
-    : "iOS·Android 정식 출시. 회원가입 없이 시작하는 토익 루틴. Part 2·3·4 듣기, Part 5 독해, 한국어 해설과 나만의 단어장, 학습 기록.";
-  await writeFile(
-    privacy ? "privacy/index.html" : "index.html",
-    `<!doctype html>\n<html lang="ko"><head><meta charset="UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1.0"/><meta name="theme-color" content="#faf8f5"/><title>${title}</title><meta name="description" content="${description}"/><meta property="og:title" content="${title}"/><meta property="og:description" content="${description}"/><meta property="og:type" content="website"/><meta property="og:locale" content="ko_KR"/><link rel="icon" href="${BASE}app-icon.png"/><link rel="stylesheet" href="/src/styles.css"/><link rel="stylesheet" href="/src/showcase.css"/></head><body data-page="${privacy ? "privacy" : "home"}"><div id="root">${renderToString(<App privacy={privacy} />)}</div><script type="module" src="/src/main.tsx"></script></body></html>\n`,
-  );
+import { SITE_COPY } from "../src/i18n";
+import {
+  BASE,
+  SITE_LOCALES,
+  SITE_ORIGIN,
+  localeHomePath,
+  localePrivacyPath,
+} from "../src/site-config";
+
+for (const locale of SITE_LOCALES) {
+  const meta = SITE_COPY[locale].meta;
+  for (const privacy of [false, true]) {
+    const title = privacy ? meta.privacyTitle : meta.homeTitle;
+    const description = privacy ? meta.privacyDescription : meta.homeDescription;
+    const outPath =
+      locale === "ko"
+        ? privacy
+          ? "privacy/index.html"
+          : "index.html"
+        : privacy
+          ? `${locale}/privacy/index.html`
+          : `${locale}/index.html`;
+    await mkdir(dirname(outPath), { recursive: true });
+    const routeFor = (l: typeof locale) =>
+      privacy ? localePrivacyPath(l) : localeHomePath(l);
+    const alternates = [
+      ...SITE_LOCALES.map(
+        (l) =>
+          `<link rel="alternate" hreflang="${l}" href="${SITE_ORIGIN}${routeFor(l)}"/>`,
+      ),
+      `<link rel="alternate" hreflang="x-default" href="${SITE_ORIGIN}${routeFor("ko")}"/>`,
+    ].join("");
+    await writeFile(
+      outPath,
+      `<!doctype html>\n<html lang="${locale}"><head><meta charset="UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1.0"/><meta name="theme-color" content="#faf8f5"/><title>${title}</title><meta name="description" content="${description}"/><meta property="og:title" content="${title}"/><meta property="og:description" content="${description}"/><meta property="og:type" content="website"/><meta property="og:locale" content="${meta.ogLocale}"/>${alternates}<link rel="icon" href="${BASE}app-icon.png"/><link rel="stylesheet" href="/src/styles.css"/><link rel="stylesheet" href="/src/showcase.css"/></head><body data-page="${privacy ? "privacy" : "home"}" data-lang="${locale}"><div id="root">${renderToString(<App privacy={privacy} locale={locale} />)}</div><script type="module" src="/src/main.tsx"></script></body></html>\n`,
+    );
+  }
 }

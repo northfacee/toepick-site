@@ -1,10 +1,10 @@
 import { BASE } from "./site-config";
 
-export function EnglishPrivacy() {
+export function EnglishPrivacy({ backHref = BASE }: { backHref?: string }) {
   return (
     <section id="privacy-en" className="policy-language-section" lang="en" aria-labelledby="privacy-en-title">
       <h1 id="privacy-en-title">Privacy Policy</h1>
-      <p className="date">Effective date and last updated: October 15, 2026</p>
+      <p className="date">Effective date and last updated: October 25, 2026</p>
       <p>
         northface (the “Operator”) processes information for ToePick (shown in
         the app as TOE-PICK; Android package: com.toepick) as described below.
@@ -134,12 +134,13 @@ export function EnglishPrivacy() {
       </p>
       <p>
         <strong>Google Gemini:</strong> The server calls the Gemini API to
-        create English questions and Korean explanations. Requests include
-        question types, topics, generation instructions, previously generated
-        sentences used to prevent duplication, and validation error details.
-        The current implementation does not send your device authentication
-        token, device-specific service identifier, selected answers, or
-        learning history in generation requests. See the{" "}
+        create English questions and explanations in Korean, English, and
+        Japanese. Requests include question types, topics, generation
+        instructions, previously generated sentences used to prevent
+        duplication, and validation error details. The current implementation
+        does not send your device authentication token, device-specific service
+        identifier, selected answers, or learning history in generation
+        requests. See the{" "}
         <a href="https://ai.google.dev/gemini-api/terms" target="_blank" rel="noreferrer">Gemini API Terms</a>.
       </p>
       <p>
@@ -246,7 +247,7 @@ export function EnglishPrivacy() {
         an updated effective date. Where applicable law requires separate
         notice or consent, we will follow that process.
       </p>
-      <p><a href={BASE}>← Back to ToePick</a></p>
+      <p><a href={backHref}>← Back to ToePick</a></p>
     </section>
   );
 }

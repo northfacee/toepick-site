@@ -11,14 +11,35 @@ import {
 } from "lucide-react";
 import { HeroShowcase } from "./hero-showcase";
 import { Preview } from "./app-preview";
+import { SITE_COPY } from "./i18n";
 import { Privacy } from "./privacy";
-import { BASE } from "./site-config";
+import {
+  BASE,
+  localeHomePath,
+  localePrivacyPath,
+  type SiteLocale,
+} from "./site-config";
 import { SupportContact } from "./support-contact";
 import { StoreLinks } from "./store-links";
 
-function Brand() {
+const LANGUAGE_ITEMS: readonly {
+  locale: SiteLocale;
+  shortLabel: string;
+  fullLabel: string;
+}[] = [
+  { locale: "ko", shortLabel: "KO", fullLabel: "한국어" },
+  { locale: "en", shortLabel: "EN", fullLabel: "English" },
+  { locale: "ja", shortLabel: "JA", fullLabel: "日本語" },
+] as const;
+
+function Brand({ locale }: { locale: SiteLocale }) {
+  const copy = SITE_COPY[locale].header;
   return (
-    <a className="brand" href={BASE} aria-label="TOE-PICK 홈">
+    <a
+      className="brand"
+      href={localeHomePath(locale)}
+      aria-label={copy.brandAria}
+    >
       <img src={`${BASE}app-icon.png`} alt="" width="38" height="38" />
       <span>
         TOE-PICK<span className="brand-star">✳</span>
@@ -26,55 +47,96 @@ function Brand() {
     </a>
   );
 }
-function Landing() {
+
+function LanguageSwitch({
+  locale,
+  privacy,
+  variant = "compact",
+}: {
+  locale: SiteLocale;
+  privacy: boolean;
+  variant?: "compact" | "full";
+}) {
+  const ariaLabel = SITE_COPY[locale].header.langSwitchAria;
+  return (
+    <div
+      className={`lang-switch lang-switch-${variant}`}
+      aria-label={ariaLabel}
+    >
+      {LANGUAGE_ITEMS.map((item) => {
+        const href = privacy
+          ? localePrivacyPath(item.locale)
+          : localeHomePath(item.locale);
+        const active = item.locale === locale;
+        return (
+          <a
+            key={item.locale}
+            href={href}
+            lang={item.locale}
+            title={item.fullLabel}
+            className={active ? "active" : undefined}
+            aria-current={active ? "page" : undefined}
+          >
+            {item.shortLabel}
+          </a>
+        );
+      })}
+    </div>
+  );
+}
+
+function Landing({ locale }: { locale: SiteLocale }) {
+  const c = SITE_COPY[locale];
   return (
     <main id="main">
       <section className="hero section-wrap">
         <div className="hero-copy">
           <div className="hero-badge">
-            <span /> NOW AVAILABLE · 정식 출시
+            <span /> {c.hero.badge}
           </div>
-          <p className="hero-kicker">토익 공부에도, 내 취향과 내 페이스.</p>
+          <p className="hero-kicker">{c.hero.kicker}</p>
           <h1>
-            매일 듣고,
+            {c.hero.titleLine1}
             <br />
-            풀고, <span className="highlight">내 것으로</span>
+            {c.hero.titleLine2Prefix}
+            <span className="highlight">{c.hero.titleHighlight}</span>
             <span className="hero-period">.</span>
           </h1>
           <p className="hero-description">
-            오늘의 LC부터 RC, 해설과 단어 복습까지.
+            {c.hero.descriptionLine1}
             <br />
-            작은 성취가 쌓이는 나만의 토익 루틴을 시작해요.
+            {c.hero.descriptionLine2}
           </p>
-          <StoreLinks compact />
+          <StoreLinks compact locale={locale} />
           <div className="hero-meta">
             <span>
-              <Check size={15} /> 회원가입 없이 바로 시작
+              <Check size={15} /> {c.hero.metaNoSignup}
             </span>
             <span>
-              <Check size={15} /> 무료 다운로드
+              <Check size={15} /> {c.hero.metaFree}
             </span>
           </div>
           <a className="hero-preview-link" href="#preview">
-            앱 미리보기 <ArrowRight size={17} />
+            {c.hero.previewCta} <ArrowRight size={17} />
           </a>
         </div>
-        <HeroShowcase />
+        <HeroShowcase locale={locale} />
       </section>
       <div className="routine-strip">
         <div className="section-wrap">
           <span className="strip-label">YOUR DAILY PICK</span>
           <span>
-            <Headphones size={18} /> 듣기 <b>Part 2·3·4</b>
+            <Headphones size={18} /> {c.routineStrip.listening}{" "}
+            <b>Part 2·3·4</b>
           </span>
           <span>
-            <BookOpen size={18} /> 독해 <b>Part 5</b>
+            <BookOpen size={18} /> {c.routineStrip.reading} <b>Part 5</b>
           </span>
           <span>
-            <Star size={18} /> 나만의 단어장
+            <Star size={18} /> {c.routineStrip.vocab}
           </span>
           <span>
-            <CalendarDays size={18} /> 매일의 학습 기록
+            <CalendarDays size={18} /> {c.routineStrip.history}
           </span>
         </div>
       </div>
@@ -83,14 +145,15 @@ function Landing() {
           <div>
             <p className="eyebrow">01 / DAILY PRACTICE</p>
             <h2>
-              오늘의 토익,
-              <br />이 두 장이면 준비 끝.
+              {c.practice.headingLine1}
+              <br />
+              {c.practice.headingLine2}
             </h2>
           </div>
           <p>
-            듣고, 읽고, 이해하는 시간.
+            {c.practice.subLine1}
             <br />
-            매일 새로운 문제로 공부의 리듬을 만들어요.
+            {c.practice.subLine2}
           </p>
         </div>
         <div className="drill-grid">
@@ -100,30 +163,33 @@ function Landing() {
               <Headphones size={28} />
             </div>
             <p className="feature-name">
-              Listening<span>귀가 트이는 오늘의 한 세트.</span>
+              Listening<span>{c.practice.listeningSub}</span>
             </p>
             <p>
-              질문·응답부터 대화와 담화까지.
+              {c.practice.listeningDescLine1}
               <br />
-              듣고 고른 뒤, 대본과 한국어 해설로 다시 이해해요.
+              {c.practice.listeningDescLine2}
             </p>
             <div className="listening-parts">
               <div>
                 <b>02</b>
                 <span>
-                  질문·응답<small>10문제</small>
+                  {c.practice.part2Name}
+                  <small>{c.practice.part2Count}</small>
                 </span>
               </div>
               <div>
                 <b>03</b>
                 <span>
-                  대화<small>3문제</small>
+                  {c.practice.part3Name}
+                  <small>{c.practice.part3Count}</small>
                 </span>
               </div>
               <div>
                 <b>04</b>
                 <span>
-                  담화<small>3문제</small>
+                  {c.practice.part4Name}
+                  <small>{c.practice.part4Count}</small>
                 </span>
               </div>
             </div>
@@ -142,8 +208,8 @@ function Landing() {
               <span className="player-side">SIDE A</span>
             </div>
             <div className="card-bottom">
-              <span>30초 미리보기로 Part 3·4도 차근차근.</span>
-              <span className="mini-tag">16문제 / DAY</span>
+              <span>{c.practice.listeningFooter}</span>
+              <span className="mini-tag">{c.practice.listeningTag}</span>
             </div>
           </article>
           <article className="feature-card lime">
@@ -152,12 +218,12 @@ function Landing() {
               <BookOpen size={28} />
             </div>
             <p className="feature-name">
-              Reading<span>빈칸 하나, 확실한 이해 하나.</span>
+              Reading<span>{c.practice.readingSub}</span>
             </p>
             <p>
-              문법·어휘·비즈니스 표현을 한 문장씩.
+              {c.practice.readingDescLine1}
               <br />
-              정답의 근거와 헷갈린 보기까지 해설로 짚어봐요.
+              {c.practice.readingDescLine2}
             </p>
             <div className="reading-paper">
               <span className="paper-tag">TODAY’S QUESTION</span>
@@ -167,14 +233,14 @@ function Landing() {
               </p>
               <div>
                 <span>
-                  <Check size={16} /> 정답의 이유까지 내 것으로
+                  <Check size={16} /> {c.practice.readingPaperCheck}
                 </span>
                 <span>✓</span>
               </div>
             </div>
             <div className="card-bottom">
-              <span>풀고, 이해하고, 기억하고.</span>
-              <span className="mini-tag">20문제 / DAY</span>
+              <span>{c.practice.readingFooter}</span>
+              <span className="mini-tag">{c.practice.readingTag}</span>
             </div>
           </article>
         </div>
@@ -183,56 +249,56 @@ function Landing() {
         <div className="section-heading">
           <div>
             <p className="eyebrow">02 / MAKE IT YOURS</p>
-            <h2>풀고 나서가 진짜 공부니까.</h2>
+            <h2>{c.review.heading}</h2>
           </div>
-          <p>문제 한 세트에서 끝나지 않는 루틴.</p>
+          <p>{c.review.sub}</p>
         </div>
         <div className="review-grid">
           <article className="review-card pink">
             <Star size={27} />
             <span className="review-index">01</span>
-            <h3>기억하고 싶은 단어는 쏙.</h3>
+            <h3>{c.review.card1Title}</h3>
             <p>
-              해설에서 만난 표현을 즐겨찾기에.
+              {c.review.card1DescLine1}
               <br />
-              예문과 함께 내 단어장에 모아요.
+              {c.review.card1DescLine2}
             </p>
             <div className="vocab-sticker">
               <span>in advance</span>
-              <small>미리, 사전에</small>
+              <small>{c.review.card1StickerMeaning}</small>
               <Star size={19} fill="currentColor" />
             </div>
           </article>
           <article className="review-card lavender">
             <Play size={27} />
             <span className="review-index">02</span>
-            <h3>내 속도로, 이어서.</h3>
+            <h3>{c.review.card2Title}</h3>
             <p>
-              풀던 문제는 이어풀고, 오답은 다시.
+              {c.review.card2DescLine1}
               <br />
-              잠깐 쉬어가도 루틴은 이어져요.
+              {c.review.card2DescLine2}
             </p>
             <div className="continue-demo">
               <span>
-                <Pause size={18} /> 잠깐의 쉼표
+                <Pause size={18} /> {c.review.card2Pause}
               </span>
               <ArrowRight size={18} />
               <b>
-                다시 시작 <Play size={14} />
+                {c.review.card2Resume} <Play size={14} />
               </b>
             </div>
           </article>
           <article className="review-card cream">
             <CalendarDays size={27} />
             <span className="review-index">03</span>
-            <h3>꾸준함이 눈에 보이게.</h3>
+            <h3>{c.review.card3Title}</h3>
             <p>
-              학습 달력과 파트별 정답·오답 기록.
+              {c.review.card3DescLine1}
               <br />
-              쌓인 공부를 돌아보고 다시 도전해요.
+              {c.review.card3DescLine2}
             </p>
             <div className="week-demo">
-              {["월", "화", "수", "목", "금"].map((d, i) => (
+              {c.review.weekdays.map((d, i) => (
                 <span key={d}>
                   <small>{d}</small>
                   <b>{i < 4 ? "✓" : "·"}</b>
@@ -242,31 +308,29 @@ function Landing() {
           </article>
         </div>
       </section>
-      <Preview />
+      <Preview locale={locale} />
       <section className="closing" id="release">
         <div className="section-wrap closing-inner">
           <img
             src={`${BASE}app-icon.png`}
-            alt="민트 헤드폰을 쓴 TOE-PICK 토끼"
+            alt={c.closing.iconAlt}
             width="88"
             height="88"
             loading="lazy"
           />
           <p className="eyebrow">SMALL STEPS. YOUR OWN PACE.</p>
           <h2>
-            오늘의 작은 시작,
+            {c.closing.headingLine1}
             <br />
-            TOE-PICK과 함께.
+            {c.closing.headingLine2}
           </h2>
           <p>
-            첫 문제를 고르는 순간부터, 나만의 루틴이 시작돼요.
+            {c.closing.descLine1}
             <br />
-            지금 앱에서 만나요.
+            {c.closing.descLine2}
           </p>
-          <StoreLinks />
-          <p className="download-note">
-            iOS · Android에서 무료 다운로드 · 앱 내 광고 포함
-          </p>
+          <StoreLinks locale={locale} />
+          <p className="download-note">{c.closing.downloadNote}</p>
         </div>
         <span className="closing-star" aria-hidden="true">
           ✳
@@ -275,38 +339,50 @@ function Landing() {
     </main>
   );
 }
-export function App({ privacy = false }: { privacy?: boolean }) {
+
+export function App({
+  privacy = false,
+  locale = "ko",
+}: {
+  privacy?: boolean;
+  locale?: SiteLocale;
+}) {
+  const c = SITE_COPY[locale];
+  const homeHref = localeHomePath(locale);
+  const privacyHref = localePrivacyPath(locale);
   return (
     <>
       <a className="skip-link" href="#main">
-        본문으로 이동
+        {c.header.skipToMain}
       </a>
       <header className="site-header">
         <div className="header-inner">
-          <Brand />
-          <nav aria-label="주 메뉴">
-            <a href={`${BASE}#practice`}>앱 소개</a>
-            <a href={`${BASE}#preview`}>미리보기</a>
-            <a className="nav-status" href={`${BASE}#release`}>
-              앱 다운로드 <ArrowUpRight size={16} />
+          <Brand locale={locale} />
+          <nav aria-label={c.header.navAria}>
+            <a href={`${homeHref}#practice`}>{c.header.about}</a>
+            <a href={`${homeHref}#preview`}>{c.header.preview}</a>
+            <LanguageSwitch locale={locale} privacy={privacy} variant="compact" />
+            <a className="nav-status" href={`${homeHref}#release`}>
+              {c.header.download} <ArrowUpRight size={16} />
             </a>
           </nav>
         </div>
       </header>
-      {privacy ? <Privacy /> : <Landing />}
+      {privacy ? <Privacy locale={locale} /> : <Landing locale={locale} />}
       <footer className="site-footer section-wrap">
         <div className="footer-top">
-          <Brand />
+          <Brand locale={locale} />
           <div className="footer-links">
-            <a href={`${BASE}privacy/`}>개인정보처리방침</a>
-            <SupportContact />
+            <LanguageSwitch locale={locale} privacy={privacy} variant="full" />
+            <a href={privacyHref}>{c.footer.privacyLink}</a>
+            <SupportContact locale={locale} />
           </div>
         </div>
         <div className="footer-bottom">
           <p>
-            TOE-PICK은 ETS의 공식 앱이 아닌 독립적인 학습 앱입니다.
+            {c.footer.disclaimerLine1}
             <br />
-            AI가 생성한 문항과 해설에는 오류가 있을 수 있습니다.
+            {c.footer.disclaimerLine2}
           </p>
           <small>© 2026 northface. All rights reserved.</small>
         </div>

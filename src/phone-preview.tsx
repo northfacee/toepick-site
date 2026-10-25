@@ -12,20 +12,24 @@ import {
   RotateCcw,
   Play,
 } from "lucide-react";
+import { SITE_COPY } from "./i18n";
+import type { SiteLocale } from "./site-config";
+
 export const tabs = ["홈", "문제", "단어", "기록"] as const;
 const icons = [Home, Star, Grid2X2, Smile];
-const navigation = ["홈", "단어", "기록", "마이페이지"];
-function HomeScreen() {
+
+function HomeScreen({ locale }: { locale: SiteLocale }) {
+  const t = SITE_COPY[locale].phone.home;
   return (
     <>
       <div className="phone-title">
         <strong>
-          DAILY QUEST<span>오늘의 작은 도전</span>
+          DAILY QUEST<span>{t.subtitle}</span>
         </strong>
         <span className="date-sticker">
-          시험일
+          {t.dateLine1}
           <br />
-          설정
+          {t.dateLine2}
         </span>
       </div>
       <div className="phone-stats">
@@ -46,37 +50,39 @@ function HomeScreen() {
         <span className="mini-label">Part 2·3·4</span>
         <Headphones className="drill-icon" size={36} />
         <h4>Listening</h4>
-        <p>질문·응답, 대화, 담화를 듣고 풀어요.</p>
+        <p>{t.listeningDesc}</p>
         <div className="mini-action">
-          Listening 열기 <ArrowRight size={15} />
+          {t.listeningAction} <ArrowRight size={15} />
         </div>
       </div>
       <div className="mini-drill lime">
         <span className="mini-label">PART 5</span>
         <BookOpen className="drill-icon" size={36} />
         <h4>Reading</h4>
-        <p>문법과 어휘를 채우는 20문제</p>
+        <p>{t.readingDesc}</p>
         <div className="mini-action">
-          Part 5 시작하기 <ArrowRight size={15} />
+          {t.readingAction} <ArrowRight size={15} />
         </div>
       </div>
       <div className="streak">
-        <Sparkles size={16} /> 오늘의 나에게, 작은 체크 하나.
+        <Sparkles size={16} /> {t.streak}
       </div>
     </>
   );
 }
-function QuestionScreen() {
+
+function QuestionScreen({ locale }: { locale: SiteLocale }) {
+  const t = SITE_COPY[locale].phone.question;
   return (
     <>
       <div className="phone-title">
         <strong>
-          READING<span>PART 5 · 문항 예시</span>
+          READING<span>{t.subtitle}</span>
         </strong>
         <span className="pill">01 / 20</span>
       </div>
       <div className="example-question">
-        <small>빈칸에 알맞은 표현을 골라보세요.</small>
+        <small>{t.prompt}</small>
         <h4>
           The team completed the project <span>______</span>.
         </h4>
@@ -88,31 +94,25 @@ function QuestionScreen() {
           </div>
         ))}
         <div className="example-explanation">
-          <b>제출 후 해설 예시</b>
-          <p>동사 completed를 꾸미는 자리에는 부사 successfully가 필요해요.</p>
+          <b>{t.explanationTitle}</b>
+          <p>{t.explanationBody}</p>
         </div>
       </div>
     </>
   );
 }
-function WordsScreen() {
+
+function WordsScreen({ locale }: { locale: SiteLocale }) {
+  const t = SITE_COPY[locale].phone.words;
   return (
     <>
       <div className="phone-title">
         <strong>
-          MY WORDS<span>다시 만나는 나의 단어</span>
+          MY WORDS<span>{t.subtitle}</span>
         </strong>
         <Star size={25} />
       </div>
-      {[
-        [
-          "successfully",
-          "성공적으로",
-          "The team completed the project successfully.",
-        ],
-        ["in advance", "미리, 사전에", "Please book your tickets in advance."],
-        ["colleague", "동료", "I had lunch with a colleague."],
-      ].map(([word, meaning, sentence], i) => (
+      {t.items.map(([word, meaning, sentence], i) => (
         <article key={word} className={`word-note word-${i}`}>
           <span className="word-star">★</span>
           <small>MY VOCABULARY</small>
@@ -124,19 +124,21 @@ function WordsScreen() {
     </>
   );
 }
-function HistoryScreen() {
+
+function HistoryScreen({ locale }: { locale: SiteLocale }) {
+  const t = SITE_COPY[locale].phone.history;
   return (
     <>
       <div className="phone-title">
         <strong>
-          MY RECORD<span>한눈에 보는 공부 습관</span>
+          MY RECORD<span>{t.subtitle}</span>
         </strong>
         <CalendarDays size={25} />
       </div>
       <div className="mini-calendar">
-        <b>나의 학습 달력</b>
+        <b>{t.calendarTitle}</b>
         <div className="calendar-grid">
-          {["월", "화", "수", "목", "금", "토", "일"].map((day) => (
+          {t.days.map((day) => (
             <small key={day}>{day}</small>
           ))}
           {Array.from({ length: 21 }, (_, i) => (
@@ -145,7 +147,7 @@ function HistoryScreen() {
             </span>
           ))}
         </div>
-        <small>✓ 학습한 날을 차곡차곡</small>
+        <small>{t.calendarNote}</small>
       </div>
       <div className="record-scores">
         {[
@@ -162,27 +164,29 @@ function HistoryScreen() {
             >
               {score}
             </span>
-            <small>정답 · 오답 기록</small>
+            <small>{t.scoreNote}</small>
           </div>
         ))}
       </div>
       <div className="record-row">
-        <span>PART 2 · 완료</span>
+        <span>{t.part2Done}</span>
         <b>8 / 10</b>
       </div>
       <div className="record-row">
-        <span>PART 5 · 완료</span>
+        <span>{t.part5Done}</span>
         <b>16 / 20</b>
       </div>
     </>
   );
 }
-function ListeningScreen() {
+
+function ListeningScreen({ locale }: { locale: SiteLocale }) {
+  const t = SITE_COPY[locale].phone.listening;
   return (
     <>
       <div className="phone-title">
         <strong>
-          LISTENING MIX<span>PART 2 · 듣기 예시</span>
+          LISTENING MIX<span>{t.subtitle}</span>
         </strong>
         <Headphones size={25} />
       </div>
@@ -202,21 +206,28 @@ function ListeningScreen() {
             <RotateCcw size={20} />
           </div>
         </div>
-        <b>듣고, 고르고, 다시 듣고.</b>
+        <b>{t.headline}</b>
       </div>
       <div className="static-answers">
         {["A", "B", "C"].map((answer, i) => (
           <div key={answer} className={i === 1 ? "picked" : ""}>
             <b>{answer}</b>
-            <span>{i === 1 ? "MY PICK ✓" : "응답 선택"}</span>
+            <span>{i === 1 ? "MY PICK ✓" : t.pickOption}</span>
           </div>
         ))}
       </div>
-      <p className="static-audio-note">소개용 예시 · 음성은 재생되지 않아요</p>
+      <p className="static-audio-note">{t.audioNote}</p>
     </>
   );
 }
-export function Phone({ screen = 0 }: { screen?: number }) {
+
+export function Phone({
+  screen = 0,
+  locale = "ko",
+}: {
+  screen?: number;
+  locale?: SiteLocale;
+}) {
   const Screen = [
     HomeScreen,
     QuestionScreen,
@@ -224,6 +235,7 @@ export function Phone({ screen = 0 }: { screen?: number }) {
     HistoryScreen,
     ListeningScreen,
   ][screen];
+  const navigation = SITE_COPY[locale].phone.nav;
   return (
     <div className="phone">
       <div className="phone-status">
@@ -232,7 +244,7 @@ export function Phone({ screen = 0 }: { screen?: number }) {
         <span>▮▮▮ ▰</span>
       </div>
       <div className="phone-content">
-        <Screen />
+        <Screen locale={locale} />
       </div>
       <div className="phone-nav" aria-hidden="true">
         {icons.map((Icon, i) => (

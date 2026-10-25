@@ -1,5 +1,7 @@
 :root {
-  font-family: Arial, "Apple SD Gothic Neo", "Malgun Gothic", sans-serif;
+  font-family:
+    Arial, "Apple SD Gothic Neo", "Malgun Gothic", "Hiragino Sans",
+    "Hiragino Kaku Gothic ProN", "Yu Gothic", "Meiryo", sans-serif;
   color: #292830;
   background: #faf9f5;
   font-synthesis: none;
@@ -63,6 +65,25 @@ h4 {
 p {
   word-break: keep-all;
   line-height: 1.8;
+}
+html[lang="en"] h1,
+html[lang="en"] h2,
+html[lang="en"] h3,
+html[lang="en"] h4,
+html[lang="en"] p,
+html[lang="ja"] h1,
+html[lang="ja"] h2,
+html[lang="ja"] h3,
+html[lang="ja"] h4,
+html[lang="ja"] p {
+  word-break: normal;
+  overflow-wrap: break-word;
+}
+html[lang="en"] .hero h1 {
+  letter-spacing: -2.4px;
+}
+html[lang="ja"] .hero h1 {
+  letter-spacing: -2.2px;
 }
 section[id] {
   scroll-margin-top: 90px;
@@ -134,13 +155,43 @@ section[id] {
 .site-header nav {
   display: flex;
   align-items: center;
-  gap: 34px;
+  gap: 24px;
   font-size: 13px;
   font-weight: 700;
 }
 .site-header nav > a:not(.nav-status):hover {
   text-decoration: underline;
   text-underline-offset: 6px;
+}
+.lang-switch {
+  display: inline-flex;
+  align-items: center;
+  gap: 2px;
+  padding: 3px;
+  border: 1.5px solid var(--ink);
+  border-radius: 999px;
+  background: #fff;
+}
+.lang-switch a {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 30px;
+  padding: 4px 9px;
+  border-radius: 999px;
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.2px;
+  line-height: 1;
+}
+.lang-switch a.active {
+  background: var(--yellow);
+  border: 1px solid var(--ink);
+}
+.lang-switch-full a {
+  min-height: 36px;
+  padding: 6px 12px;
+  font-size: 12px;
 }
 .nav-status {
   border: 1.5px solid var(--ink);
@@ -1280,6 +1331,7 @@ html:has(body[data-page="privacy"]) {
 }
 .policy-languages {
   display: flex;
+  flex-wrap: wrap;
   gap: 10px;
   margin: 22px 0 30px;
 }
@@ -1322,8 +1374,11 @@ html:has(body[data-page="privacy"]) {
   word-break: keep-all;
 }
 .policy [lang="en"] p,
-.policy [lang="en"] li {
+.policy [lang="en"] li,
+.policy [lang="ja"] p,
+.policy [lang="ja"] li {
   word-break: normal;
+  overflow-wrap: break-word;
 }
 .policy p {
   margin-block: 18px;
@@ -1617,8 +1672,16 @@ html:has(body[data-page="privacy"]) {
     font-size: 20px;
   }
   .site-header nav {
-    gap: 16px;
+    gap: 10px;
     font-size: 11px;
+  }
+  .site-header nav > a:not(.nav-status) {
+    display: none;
+  }
+  .lang-switch a {
+    min-height: 28px;
+    padding: 4px 8px;
+    font-size: 10px;
   }
   .nav-status {
     display: none;

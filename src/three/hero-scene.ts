@@ -1,6 +1,6 @@
 import * as THREE from "three";
 import { makePhone, makeStar } from "./scene-objects";
-import { BASE } from "../site-config";
+import { BASE, type SiteLocale } from "../site-config";
 
 export interface ShowcaseController {
   setMode: (mode: number) => void;
@@ -8,6 +8,7 @@ export interface ShowcaseController {
 }
 interface SceneOptions {
   mode: number;
+  locale?: SiteLocale;
   onReady: () => void;
   onFailure: () => void;
 }
@@ -272,8 +273,12 @@ export function createShowcase(
   );
   intersectionObserver.observe(host);
   const loader = new THREE.TextureLoader();
+  const showcasePrefix =
+    options.locale && options.locale !== "ko"
+      ? `${BASE}showcase/${options.locale}/`
+      : `${BASE}showcase/`;
   const load = (file: string) =>
-    loader.loadAsync(`${BASE}showcase/${file}.svg`).then((texture) => {
+    loader.loadAsync(`${showcasePrefix}${file}.svg`).then((texture) => {
       if (disposed) {
         texture.dispose();
         return texture;

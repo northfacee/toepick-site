@@ -1,4 +1,7 @@
 import { test, expect } from "@playwright/test";
+
+const origin = `http://127.0.0.1:${process.env.PLAYWRIGHT_PORT || "4173"}/`;
+
 for (const width of [360, 768, 1440]) {
   test(`responsive layout and preview at ${width}px`, async ({ page }) => {
     await page.setViewportSize({ width, height: 1000 });
@@ -6,7 +9,7 @@ for (const width of [360, 768, 1440]) {
     page.on("pageerror", (e) => errors.push(e.message));
     const requests: string[] = [];
     page.on("request", (r) => {
-      if (!r.url().startsWith("http://127.0.0.1:4173/")) requests.push(r.url());
+      if (!r.url().startsWith(origin)) requests.push(r.url());
     });
     await page.goto("./");
     await expect(page.getByRole("heading", { level: 1 })).toContainText(
@@ -70,7 +73,7 @@ test("privacy direct navigation and refresh without JavaScript", async ({
   const context = await browser.newContext({ javaScriptEnabled: false });
   const page = await context.newPage();
   await page.setViewportSize({ width: 360, height: 780 });
-  await page.goto("http://127.0.0.1:4173/privacy/");
+  await page.goto(`${origin}privacy/`);
   await page.reload();
   expect(
     await page.evaluate(
@@ -91,10 +94,132 @@ test("privacy direct navigation and refresh without JavaScript", async ({
   );
   await page.getByRole("link", { name: "English", exact: true }).click();
   await expect(page).toHaveURL(/privacy\/#privacy-en$/);
+  await page.getByRole("link", { name: "日本語", exact: true }).click();
+  await expect(page).toHaveURL(/privacy\/#privacy-ja$/);
+  await expect(
+    page.getByRole("heading", { name: "プライバシーポリシー", exact: true }),
+  ).toBeVisible();
   await page.getByRole("link", { name: "← Back to ToePick" }).click();
   await expect(page.getByRole("heading", { level: 1 })).toContainText(
     "매일 듣고",
   );
+  await context.close();
+});
+
+for (const width of [360, 768, 1440]) {
+  test(`English and Japanese responsive layout and preview at ${width}px`, async ({
+    page,
+  }) => {
+    await page.setViewportSize({ width, height: 1000 });
+    const errors: string[] = [];
+    page.on("pageerror", (e) => errors.push(e.message));
+    const requests: string[] = [];
+    page.on("request", (r) => {
+      if (!r.url().startsWith(origin)) requests.push(r.url());
+    });
+
+    await page.goto(`${origin}en/`);
+    await expect(page.locator("html")).toHaveAttribute("lang", "en");
+    await expect(page.getByRole("heading", { level: 1 })).toContainText(
+      "Listen daily",
+    );
+    for (const tab of ["Home", "Question", "Words", "History"]) {
+      await page.getByRole("tab", { name: tab, exact: true }).click();
+      await expect(
+        page.getByRole("tab", { name: tab, exact: true }),
+      ).toHaveAttribute("aria-selected", "true");
+      expect(
+        await page.evaluate(
+          () => document.documentElement.scrollWidth <= window.innerWidth,
+        ),
+      ).toBe(true);
+    }
+
+    await page.goto(`${origin}ja/`);
+    await expect(page.locator("html")).toHaveAttribute("lang", "ja");
+    await expect(page.getByRole("heading", { level: 1 })).toContainText(
+      "毎日聴いて",
+    );
+    for (const tab of ["ホーム", "問題", "単語", "記録"]) {
+      await page.getByRole("tab", { name: tab, exact: true }).click();
+      await expect(
+        page.getByRole("tab", { name: tab, exact: true }),
+      ).toHaveAttribute("aria-selected", "true");
+      expect(
+        await page.evaluate(
+          () => document.documentElement.scrollWidth <= window.innerWidth,
+        ),
+      ).toBe(true);
+    }
+
+    expect(errors).toEqual([]);
+    expect(requests).toEqual([]);
+  });
+}
+
+test("localized language switchers, store links and privacy routes without JS", async ({
+  browser,
+}) => {
+  const context = await browser.newContext({ javaScriptEnabled: false });
+  const page = await context.newPage();
+  await page.setViewportSize({ width: 390, height: 844 });
+
+  await page.goto(origin);
+  await page.locator(".site-header .lang-switch a[lang='en']").click();
+  await expect(page).toHaveURL(/\/en\/$/);
+  await expect(
+    page
+      .getByRole("link", {
+        name: "Download on the App Store (opens in a new tab)",
+        exact: true,
+      })
+      .first(),
+  ).toHaveAttribute("href", "https://apps.apple.com/us/app/id6810698104");
+  await expect(
+    page
+      .getByRole("link", {
+        name: "Get it on Google Play (opens in a new tab)",
+        exact: true,
+      })
+      .first(),
+  ).toHaveAttribute(
+    "href",
+    "https://play.google.com/store/apps/details?id=com.toepick&hl=en",
+  );
+
+  await page.getByRole("link", { name: "Privacy Policy", exact: true }).click();
+  await expect(page).toHaveURL(/\/en\/privacy\/$/);
+  await expect(
+    page.locator(".policy-language-section").first(),
+  ).toHaveAttribute("id", "privacy-en");
+
+  await page.locator(".site-header .lang-switch a[lang='ja']").click();
+  await expect(page).toHaveURL(/\/ja\/privacy\/$/);
+  await expect(
+    page.locator(".policy-language-section").first(),
+  ).toHaveAttribute("id", "privacy-ja");
+  await page.getByRole("link", { name: "← ToePick 紹介ページへ戻る" }).first().click();
+  await expect(page).toHaveURL(/\/ja\/$/);
+  await expect(
+    page
+      .getByRole("link", {
+        name: "App Storeからダウンロード（新しいタブ）",
+        exact: true,
+      })
+      .first(),
+  ).toHaveAttribute("href", "https://apps.apple.com/jp/app/id6810698104");
+  await expect(
+    page
+      .getByRole("link", {
+        name: "Google Playで手に入れよう（新しいタブ）",
+        exact: true,
+      })
+      .first(),
+  ).toHaveAttribute(
+    "href",
+    "https://play.google.com/store/apps/details?id=com.toepick&hl=ja",
+  );
+
   await context.close();
 });
 test("navigation, asset delivery and release status", async ({ page }) => {

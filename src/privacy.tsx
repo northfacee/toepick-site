@@ -1,16 +1,12 @@
-import { BASE } from "./site-config";
+import { localeHomePath, type SiteLocale } from "./site-config";
 import { EnglishPrivacy } from "./privacy-en";
-export function Privacy() {
+import { JapanesePrivacy } from "./privacy-ja";
+
+function KoreanPrivacy({ backHref }: { backHref: string }) {
   return (
-    <main id="main" className="policy">
-      <p className="eyebrow">TOEPICK · PRIVACY POLICY</p>
-      <nav className="policy-languages" aria-label="개인정보처리방침 언어 / Privacy policy languages">
-        <a href="#privacy-ko" lang="ko">한국어</a>
-        <a href="#privacy-en" lang="en">English</a>
-      </nav>
       <section id="privacy-ko" className="policy-language-section" lang="ko" aria-labelledby="privacy-ko-title">
       <h1 id="privacy-ko-title">개인정보처리방침</h1>
-      <p className="date">시행일 및 최종 수정일: 2026년 10월 15일</p>
+      <p className="date">시행일 및 최종 수정일: 2026년 10월 25일</p>
       <p>
         northface(이하 “운영자”)는 ToePick(앱 내 표기: TOE-PICK, Android 패키지:
         com.toepick)의 사용자 정보를 아래와 같이 처리합니다. 이 방침은 ToePick
@@ -119,7 +115,7 @@ export function Privacy() {
         에서 확인할 수 있습니다.
       </p>
       <p>
-        <strong>Google Gemini:</strong> 영어 문제와 한국어 해설을 만들기 위해
+        <strong>Google Gemini:</strong> 영어 문제와 한국어·영어·일본어 해설을 만들기 위해
         서버가 Google Gemini API를 호출합니다. 요청에는 문제 유형·주제·생성
         지시, 중복 방지를 위한 생성 문장과 검증 오류 정보가 포함됩니다. 현재
         구현에서는 기기 인증 토큰, 기기별 식별자, 이용자의 선택 답안이나 학습
@@ -241,10 +237,50 @@ export function Privacy() {
         동의가 필요한 경우 해당 절차를 진행합니다.
       </p>
       <p>
-        <a href={BASE}>← ToePick 소개로 돌아가기</a>
+        <a href={backHref}>← ToePick 소개로 돌아가기</a>
       </p>
       </section>
-      <EnglishPrivacy />
+  );
+}
+
+export function Privacy({ locale = "ko" }: { locale?: SiteLocale }) {
+  const backHref = localeHomePath(locale);
+  const sections =
+    locale === "en"
+      ? [
+          <EnglishPrivacy key="en" backHref={backHref} />,
+          <KoreanPrivacy key="ko" backHref={backHref} />,
+          <JapanesePrivacy key="ja" backHref={backHref} />,
+        ]
+      : locale === "ja"
+        ? [
+            <JapanesePrivacy key="ja" backHref={backHref} />,
+            <EnglishPrivacy key="en" backHref={backHref} />,
+            <KoreanPrivacy key="ko" backHref={backHref} />,
+          ]
+        : [
+            <KoreanPrivacy key="ko" backHref={backHref} />,
+            <EnglishPrivacy key="en" backHref={backHref} />,
+            <JapanesePrivacy key="ja" backHref={backHref} />,
+          ];
+  return (
+    <main id="main" className="policy">
+      <p className="eyebrow">TOEPICK · PRIVACY POLICY</p>
+      <nav
+        className="policy-languages"
+        aria-label="개인정보처리방침 언어 / Privacy policy languages / プライバシーポリシーの言語"
+      >
+        <a href="#privacy-ko" lang="ko">
+          한국어
+        </a>
+        <a href="#privacy-en" lang="en">
+          English
+        </a>
+        <a href="#privacy-ja" lang="ja">
+          日本語
+        </a>
+      </nav>
+      {sections}
     </main>
   );
 }

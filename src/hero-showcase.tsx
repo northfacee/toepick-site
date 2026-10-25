@@ -1,32 +1,17 @@
 import { useEffect, useRef, useState } from "react";
 import { BookOpen, Headphones, MoveHorizontal, Star } from "lucide-react";
+import { SITE_COPY } from "./i18n";
 import { Phone } from "./phone-preview";
+import type { SiteLocale } from "./site-config";
 import type { ShowcaseController } from "./three/hero-scene";
 
-const modes = [
-  {
-    label: "듣기",
-    icon: Headphones,
-    screen: 4,
-    caption: "듣고, 고르고. 귀가 열리는 작은 루틴.",
-    tag: "LISTENING",
-  },
-  {
-    label: "독해",
-    icon: BookOpen,
-    screen: 1,
-    caption: "한 문장씩 이해하고, 내 실력으로.",
-    tag: "READING",
-  },
-  {
-    label: "단어",
-    icon: Star,
-    screen: 2,
-    caption: "오늘 만난 표현, 내일의 자신감.",
-    tag: "MY WORDS",
-  },
-];
-export function HeroShowcase() {
+const modeDefs = [
+  { icon: Headphones, screen: 4 },
+  { icon: BookOpen, screen: 1 },
+  { icon: Star, screen: 2 },
+] as const;
+
+export function HeroShowcase({ locale = "ko" }: { locale?: SiteLocale }) {
   const [mode, setMode] = useState(0);
   const [state, setState] = useState<
     "static" | "loading" | "ready" | "fallback"
@@ -37,6 +22,8 @@ export function HeroShowcase() {
   const stage = useRef<HTMLDivElement>(null);
   const controller = useRef<ShowcaseController | null>(null);
   const modeRef = useRef(mode);
+  const t = SITE_COPY[locale].showcase;
+
   useEffect(() => {
     setEnhanced(true);
     const media = window.matchMedia("(prefers-reduced-motion: reduce)");
@@ -45,6 +32,7 @@ export function HeroShowcase() {
     media.addEventListener("change", sync);
     return () => media.removeEventListener("change", sync);
   }, []);
+
   useEffect(() => {
     if (reduced) {
       setState("static");
@@ -66,6 +54,7 @@ export function HeroShowcase() {
             if (cancelled) return;
             controller.current = createShowcase(container, {
               mode: modeRef.current,
+              locale,
               onReady: () => {
                 if (!cancelled) setState("ready");
               },
@@ -87,13 +76,17 @@ export function HeroShowcase() {
       controller.current?.dispose();
       controller.current = null;
     };
-  }, [reduced]);
+  }, [reduced, locale]);
+
   function select(next: number) {
     modeRef.current = next;
     setMode(next);
     controller.current?.setMode(next);
   }
-  const selected = modes[mode];
+
+  const selectedCopy = t.modes[mode];
+  const selectedDef = modeDefs[mode];
+
   return (
     <div className="hero-showcase" data-state={state} data-selected-mode={mode}>
       <div className="showcase-stage" ref={stage}>
@@ -106,13 +99,14 @@ export function HeroShowcase() {
             <Headphones size={18} />
           </span>
           <span>
-            오늘도, 한 문제씩.<small>MAKE IT A DAILY THING.</small>
+            {t.stickerTitle}
+            <small>{t.stickerSub}</small>
           </span>
         </span>
         <div className="showcase-canvas" ref={host} aria-hidden="true" />
         {state !== "ready" && (
           <div className="showcase-fallback">
-            <Phone screen={selected.screen} />
+            <Phone screen={selectedDef.screen} locale={locale} />
             <span className="fallback-star" aria-hidden="true">
               ✦
             </span>
@@ -123,33 +117,32 @@ export function HeroShowcase() {
         </span>
         <span className="showcase-drag-hint">
           <MoveHorizontal size={15} />
-          {state === "ready"
-            ? "가볍게 드래그해 보세요"
-            : "아래에서 화면을 골라보세요"}
+          {state === "ready" ? t.dragHintReady : t.dragHintStatic}
         </span>
       </div>
-      <fieldset className="showcase-controls" aria-label="3D 앱 미리보기 모드">
-        {modes.map(({ label, icon: Icon }, index) => (
-          <button
-            key={label}
-            type="button"
-            aria-pressed={mode === index}
-            disabled={!enhanced}
-            onClick={() => select(index)}
-          >
-            <Icon size={17} />
-            {label}
-            <span className="mode-dot" />
-          </button>
-        ))}
+      <fieldset className="showcase-controls" aria-label={t.controlsAria}>
+        {t.modes.map(({ label }, index) => {
+          const Icon = modeDefs[index].icon;
+          return (
+            <button
+              key={label}
+              type="button"
+              aria-pressed={mode === index}
+              disabled={!enhanced}
+              onClick={() => select(index)}
+            >
+              <Icon size={17} />
+              {label}
+              <span className="mode-dot" />
+            </button>
+          );
+        })}
       </fieldset>
       <div className="showcase-caption" aria-live="polite">
-        <b>{selected.tag}</b>
-        <span>{selected.caption}</span>
+        <b>{selectedCopy.tag}</b>
+        <span>{selectedCopy.caption}</span>
       </div>
-      <p className="showcase-disclaimer">
-        소개용 예시 화면 · 음성은 재생되지 않아요
-      </p>
+      <p className="showcase-disclaimer">{t.disclaimer}</p>
     </div>
   );
 }

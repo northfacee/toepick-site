@@ -174,7 +174,7 @@ test("mobile touch scroll remains native over the 3D canvas", async ({
     hasTouch: true,
   });
   const page = await context.newPage();
-  await page.goto("http://127.0.0.1:4173/");
+  await page.goto("./");
   await expect(page.locator(".hero-showcase")).toHaveAttribute(
     "data-state",
     "ready",
@@ -233,4 +233,50 @@ test("visibility lifecycle pauses and resumes the render loop", async ({
     document.dispatchEvent(new Event("visibilitychange"));
   });
   await expect(host).toHaveAttribute("data-rendering", "active");
+});
+
+test("English and Japanese 3D showcase loads localized SVG textures", async ({
+  page,
+}) => {
+  await page.setViewportSize({ width: 1440, height: 1000 });
+  const loadedTextures: string[] = [];
+  page.on("response", (r) => {
+    if (r.url().includes("/showcase/") && r.status() === 200) {
+      loadedTextures.push(new URL(r.url()).pathname);
+    }
+  });
+
+  await page.goto("en/");
+  await expect(page.locator(".hero-showcase")).toHaveAttribute(
+    "data-state",
+    "ready",
+  );
+  expect(loadedTextures).toContain("/showcase/en/listening.svg");
+  expect(loadedTextures).toContain("/showcase/en/reading.svg");
+  expect(loadedTextures).toContain("/showcase/en/words.svg");
+
+  const enGroup = page.getByRole("group", { name: "3D app preview mode" });
+  await enGroup.getByRole("button", { name: "Reading", exact: true }).click();
+  await expect(page.locator(".showcase-canvas")).toHaveAttribute(
+    "data-mode",
+    "1",
+  );
+
+  await page.goto("ja/");
+  await expect(page.locator(".hero-showcase")).toHaveAttribute(
+    "data-state",
+    "ready",
+  );
+  expect(loadedTextures).toContain("/showcase/ja/listening.svg");
+  expect(loadedTextures).toContain("/showcase/ja/reading.svg");
+  expect(loadedTextures).toContain("/showcase/ja/words.svg");
+
+  const jaGroup = page.getByRole("group", {
+    name: "3Dアプリプレビューモード",
+  });
+  await jaGroup.getByRole("button", { name: "単語", exact: true }).click();
+  await expect(page.locator(".showcase-canvas")).toHaveAttribute(
+    "data-mode",
+    "2",
+  );
 });

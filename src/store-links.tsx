@@ -1,18 +1,27 @@
 import { ArrowUpRight, Smartphone, Play } from "lucide-react";
-import { STORE_URLS } from "./site-config";
+import { SITE_COPY } from "./i18n";
+import { STORE_URLS_BY_LOCALE, type SiteLocale } from "./site-config";
 
-export function StoreLinks({ compact = false }: { compact?: boolean }) {
+export function StoreLinks({
+  compact = false,
+  locale = "ko",
+}: {
+  compact?: boolean;
+  locale?: SiteLocale;
+}) {
+  const urls = STORE_URLS_BY_LOCALE[locale];
+  const copy = SITE_COPY[locale].store;
   return (
     <div
       className={`store-links${compact ? " compact" : ""}`}
-      aria-label="앱 다운로드"
+      aria-label={copy.groupAria}
     >
       <a
         className="store-link store-apple"
-        href={STORE_URLS.apple}
+        href={urls.apple}
         target="_blank"
         rel="noopener noreferrer"
-        aria-label="App Store에서 다운로드 (새 창)"
+        aria-label={copy.appleAria}
       >
         <Smartphone size={24} strokeWidth={1.7} />
         <span>
@@ -23,10 +32,10 @@ export function StoreLinks({ compact = false }: { compact?: boolean }) {
       </a>
       <a
         className="store-link store-google"
-        href={STORE_URLS.google}
+        href={urls.google}
         target="_blank"
         rel="noopener noreferrer"
-        aria-label="Google Play에서 다운로드 (새 창)"
+        aria-label={copy.googleAria}
       >
         <Play size={23} strokeWidth={1.7} />
         <span>
