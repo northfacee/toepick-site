@@ -10,14 +10,14 @@ React **19.3.0** · TypeScript · Vite **8.3.0** 기반 한국어·영어·일�
 - **언어별 정적 경로 6종 프리렌더링 (`scripts/render.tsx`, `vite.config.ts`, `scripts/prepare-pages.mjs`)**:
   - 한국어(기본): `/` (`index.html`), `/privacy/` (`privacy/index.html`)
   - 영어: `/en/` (`en/index.html`), `/en/privacy/` (`en/privacy/index.html`)
-  - 일본어: `/ja/` (`ja/index.html`), `/ja/privacy/` (`ja/privacy/index.html`)
+  - 일본어: `/jp/` (`jp/index.html`), `/jp/privacy/` (`jp/privacy/index.html`)
   - 모든 경로는 빌드 시 React SSR(`renderToString`)로 정적 HTML을 생성해 JavaScript 없이도 각 언어의 본문, `<html lang="ko|en|ja">`, `<title>`, `<meta name="description">`, `og:locale`(`ko_KR`/`en_US`/`ja_JP`), `<link rel="alternate" hreflang="...">`를 제공한다.
 - **랜딩 페이지·폰 미리보기·스토어 링크 현지화 (`src/i18n.ts`, `src/site-config.ts`)**:
   - 상단 헤더와 하단 푸터에 언어 전환 내비게이션(`KO` / `EN` / `JP`)을 추가했다.
   - 첫 화면, 루틴 스트립, 파트별 소개(Listening Part 2·3·4, Reading Part 5), 복습 카드 3종, 인터랙티브 앱 미리보기(4개 탭 × 폰 화면 5종), 하단 이메일 문의·복사 컴포넌트를 한·영·일 3개 언어로 제공한다.
   - App Store(`kr`/`us`/`jp`)와 Google Play(`hl=ko`/`en`/`ja`) 다운로드 링크를 각 언어에 맞게 연결한다.
 - **개인정보처리방침 일본어(`src/privacy-ja.tsx`, `#privacy-ja`) 추가**:
-  - 한국어(`#privacy-ko`)·영어(`#privacy-en`)와 동일한 범위의 일본어(`#privacy-ja`, `プライバシーポリシー`) 개인정보처리방침을 추가하고, `/privacy/`, `/en/privacy/`, `/ja/privacy/` 진입 시 해당 언어 섹션을 최상단에 배치한다.
+  - 한국어(`#privacy-ko`)·영어(`#privacy-en`)와 동일한 범위의 일본어(`#privacy-ja`, `プライバシーポリシー`) 개인정보처리방침을 추가하고, `/privacy/`, `/en/privacy/`, `/jp/privacy/` 진입 시 해당 언어 섹션을 최상단에 배치한다.
 - **검증**: `npm run typecheck`, `npm run lint`, `npm run build`(`prepare-pages.mjs` 6개 경로·에셋·내부 링크·`CNAME`·`app-ads.txt` 검증 포함), Playwright Chromium 테스트 **14개 통과**(`PLAYWRIGHT_PORT=4179 npm test`).
 
 ## 구현

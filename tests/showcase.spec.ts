@@ -138,7 +138,7 @@ test("English and Japanese 2D hero showcase switches modes cleanly", async ({
     ).toBe(true);
   }
 
-  await page.goto("ja/");
+  await page.goto("jp/");
   await expect(page.locator(".hero-showcase")).toHaveAttribute(
     "data-state",
     "static",

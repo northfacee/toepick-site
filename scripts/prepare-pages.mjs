@@ -7,8 +7,8 @@ const pages = [
   "privacy/index.html",
   "en/index.html",
   "en/privacy/index.html",
-  "ja/index.html",
-  "ja/privacy/index.html",
+  "jp/index.html",
+  "jp/privacy/index.html",
 ];
 
 for (const page of pages) {
@@ -46,7 +46,7 @@ if (
 await writeFile(join(root, ".nojekyll"), "");
 await writeFile(
   join(root, "404.html"),
-  '<!doctype html><html lang="ko"><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>페이지를 찾을 수 없습니다 | TOE-PICK</title><h1>페이지를 찾을 수 없습니다.</h1><p><a href="/">한국어 홈</a> · <a href="/en/">English Home</a> · <a href="/ja/">日本語ホーム</a></p></html>',
+  '<!doctype html><html lang="ko"><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>페이지를 찾을 수 없습니다 | TOE-PICK</title><h1>페이지를 찾을 수 없습니다.</h1><p><a href="/">한국어 홈</a> · <a href="/en/">English Home</a> · <a href="/jp/">日本語ホーム</a></p></html>',
 );
 await rm("docs", { recursive: true, force: true });
 await cp(root, "docs", { recursive: true });

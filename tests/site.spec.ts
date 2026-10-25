@@ -135,7 +135,7 @@ for (const width of [360, 768, 1440]) {
       ).toBe(true);
     }
 
-    await page.goto(`${origin}ja/`);
+    await page.goto(`${origin}jp/`);
     await expect(page.locator("html")).toHaveAttribute("lang", "ja");
     await expect(page.getByRole("heading", { level: 1 })).toContainText(
       "毎日聴いて",
@@ -194,12 +194,12 @@ test("localized language switchers, store links and privacy routes without JS", 
   ).toHaveAttribute("id", "privacy-en");
 
   await page.locator(".site-header .lang-switch a[lang='ja']").click();
-  await expect(page).toHaveURL(/\/ja\/privacy\/$/);
+  await expect(page).toHaveURL(/\/jp\/privacy\/$/);
   await expect(
     page.locator(".policy-language-section").first(),
   ).toHaveAttribute("id", "privacy-ja");
   await page.getByRole("link", { name: "← ToePick 紹介ページへ戻る" }).first().click();
-  await expect(page).toHaveURL(/\/ja\/$/);
+  await expect(page).toHaveURL(/\/jp\/$/);
   await expect(
     page
       .getByRole("link", {

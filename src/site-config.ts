@@ -27,10 +27,14 @@ export function isSiteLocale(value: string | undefined): value is SiteLocale {
   return value === "ko" || value === "en" || value === "ja";
 }
 
+export function localeSlug(locale: SiteLocale): string {
+  return locale === "ja" ? "jp" : locale;
+}
+
 export function localeHomePath(locale: SiteLocale): string {
-  return locale === "ko" ? BASE : `${BASE}${locale}/`;
+  return locale === "ko" ? BASE : `${BASE}${localeSlug(locale)}/`;
 }
 
 export function localePrivacyPath(locale: SiteLocale): string {
-  return locale === "ko" ? `${BASE}privacy/` : `${BASE}${locale}/privacy/`;
+  return locale === "ko" ? `${BASE}privacy/` : `${BASE}${localeSlug(locale)}/privacy/`;
 }

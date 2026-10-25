@@ -9,10 +9,12 @@ import {
   SITE_ORIGIN,
   localeHomePath,
   localePrivacyPath,
+  localeSlug,
 } from "../src/site-config";
 
 for (const locale of SITE_LOCALES) {
   const meta = SITE_COPY[locale].meta;
+  const slug = localeSlug(locale);
   for (const privacy of [false, true]) {
     const title = privacy ? meta.privacyTitle : meta.homeTitle;
     const description = privacy ? meta.privacyDescription : meta.homeDescription;
@@ -22,8 +24,8 @@ for (const locale of SITE_LOCALES) {
           ? "privacy/index.html"
           : "index.html"
         : privacy
-          ? `${locale}/privacy/index.html`
-          : `${locale}/index.html`;
+          ? `${slug}/privacy/index.html`
+          : `${slug}/index.html`;
     await mkdir(dirname(outPath), { recursive: true });
     const routeFor = (l: typeof locale) =>
       privacy ? localePrivacyPath(l) : localeHomePath(l);
