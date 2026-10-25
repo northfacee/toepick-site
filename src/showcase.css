@@ -184,22 +184,6 @@
   background-size: 18px 18px;
   opacity: 0.32;
 }
-.showcase-canvas {
-  position: absolute;
-  inset: 0;
-  z-index: 2;
-  touch-action: pan-y;
-  cursor: grab;
-}
-.showcase-canvas[data-dragging="true"] {
-  cursor: grabbing;
-}
-.showcase-canvas canvas {
-  display: block;
-  width: 100%;
-  height: 100%;
-  touch-action: pan-y;
-}
 .showcase-sticker {
   position: absolute;
   right: -4px;
@@ -244,20 +228,6 @@
   letter-spacing: 2.5px;
   z-index: 1;
   color: #7d6b8d;
-}
-.showcase-drag-hint {
-  position: absolute;
-  bottom: 3px;
-  left: 0;
-  right: 0;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  gap: 7px;
-  font-size: 10px;
-  color: #82768c;
-  pointer-events: none;
-  z-index: 3;
 }
 .showcase-fallback {
   height: 100%;

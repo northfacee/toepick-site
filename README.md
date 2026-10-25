@@ -1,11 +1,11 @@
 # TOE-PICK 소개 웹사이트
 
-React **19.3.0** · TypeScript · Vite **8.3.0** · Three.js **0.186.0** 기반 한국어·영어·일본어 정적 소개 사이트. React와 React DOM은 같은 버전으로 고정한다. 서버 런타임·API·회원가입·방문 분석 없이 동작한다.
+React **19.3.0** · TypeScript · Vite **8.3.0** 기반 한국어·영어·일본어 정적 소개 사이트. React와 React DOM은 같은 버전으로 고정한다. 서버 런타임·API·회원가입·방문 분석 없이 동작한다.
 
 ## 한국어·영어·일본어 정적 다국어 지원 및 2D 히어로 쇼케이스 전환 (2026-10-25)
 
-- **첫 화면 히어로 쇼케이스를 2D 정적 폰 미리보기로 전환 (`src/hero-showcase.tsx`, `tests/showcase.spec.ts`)**:
-  - 초기 렌더링 직후 Three.js/WebGL 캔버스로 교체되면서 발생하던 약 0.1초간의 2D→3D 화면 전환 깜빡임과 ~571KB Three.js 동적 청크 로드를 제거하고, 첫 화면에서 즉시 선명한 2D 휴대폰 프리뷰(`Phone`)만 표시하도록 단순화했다.
+- **첫 화면 히어로 쇼케이스를 2D 정적 폰 미리보기로 전환 및 3D 코드 완전 제거 (`src/hero-showcase.tsx`, `tests/showcase.spec.ts`)**:
+  - 초기 렌더링 직후 Three.js/WebGL 캔버스로 교체되면서 발생하던 약 0.1초간의 2D→3D 화면 전환 깜빡임을 없애기 위해 `src/three/`, `public/showcase/`, `three` 패키지 의존성 및 3D 캔버스/드래그 스타일을 완전히 제거하고, 첫 화면에서 즉시 선명한 2D 휴대폰 프리뷰(`Phone`)만 표시하도록 단순화했다.
   - 상단 `[듣기] [독해] [단어]` (`Listening` / `Reading` / `Words`, `リスニング` / `リーディング` / `単語`) 모드 전환 버튼은 그대로 유지하여 2D 휴대폰 화면이 즉시 전환된다.
 - **언어별 정적 경로 6종 프리렌더링 (`scripts/render.tsx`, `vite.config.ts`, `scripts/prepare-pages.mjs`)**:
   - 한국어(기본): `/` (`index.html`), `/privacy/` (`privacy/index.html`)
@@ -13,7 +13,7 @@ React **19.3.0** · TypeScript · Vite **8.3.0** · Three.js **0.186.0** 기반 
   - 일본어: `/ja/` (`ja/index.html`), `/ja/privacy/` (`ja/privacy/index.html`)
   - 모든 경로는 빌드 시 React SSR(`renderToString`)로 정적 HTML을 생성해 JavaScript 없이도 각 언어의 본문, `<html lang="ko|en|ja">`, `<title>`, `<meta name="description">`, `og:locale`(`ko_KR`/`en_US`/`ja_JP`), `<link rel="alternate" hreflang="...">`를 제공한다.
 - **랜딩 페이지·폰 미리보기·스토어 링크 현지화 (`src/i18n.ts`, `src/site-config.ts`)**:
-  - 상단 헤더(`KO` / `EN` / `JA`)와 하단 푸터(`한국어` / `English` / `日本語`)에 언어 전환 내비게이션을 추가했다.
+  - 상단 헤더와 하단 푸터에 언어 전환 내비게이션(`KO` / `EN` / `JP`)을 추가했다.
   - 첫 화면, 루틴 스트립, 파트별 소개(Listening Part 2·3·4, Reading Part 5), 복습 카드 3종, 인터랙티브 앱 미리보기(4개 탭 × 폰 화면 5종), 하단 이메일 문의·복사 컴포넌트를 한·영·일 3개 언어로 제공한다.
   - App Store(`kr`/`us`/`jp`)와 Google Play(`hl=ko`/`en`/`ja`) 다운로드 링크를 각 언어에 맞게 연결한다.
 - **개인정보처리방침 일본어(`src/privacy-ja.tsx`, `#privacy-ja`) 추가**:

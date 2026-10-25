@@ -29,7 +29,7 @@ const LANGUAGE_ITEMS: readonly {
 }[] = [
   { locale: "ko", shortLabel: "KO", fullLabel: "한국어" },
   { locale: "en", shortLabel: "EN", fullLabel: "English" },
-  { locale: "ja", shortLabel: "JA", fullLabel: "日本語" },
+  { locale: "ja", shortLabel: "JP", fullLabel: "日本語" },
 ] as const;
 
 function Brand({ locale }: { locale: SiteLocale }) {

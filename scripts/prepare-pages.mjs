@@ -35,20 +35,6 @@ for (const page of pages) {
   }
 }
 
-for (const showcasePath of [
-  "showcase/listening.svg",
-  "showcase/reading.svg",
-  "showcase/words.svg",
-  "showcase/en/listening.svg",
-  "showcase/en/reading.svg",
-  "showcase/en/words.svg",
-  "showcase/ja/listening.svg",
-  "showcase/ja/reading.svg",
-  "showcase/ja/words.svg",
-]) {
-  await readFile(join(root, showcasePath));
-}
-
 if ((await readFile(join(root, "CNAME"), "utf8")).trim() !== "toepick.minlabs.app")
   throw new Error("Missing custom domain");
 if (
